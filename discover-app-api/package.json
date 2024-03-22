@@ -1,0 +1,34 @@
+{
+  "name": "discover-app-api",
+  "version": "1.0.0",
+  "description": "application that helps discover, launch and review products",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "runDev": "nodemon -r dotenv/config app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeveloperSenior/discover-app.git"
+  },
+  "author": "Andres Escobar, Rina Plata, Johan Alexis Agudelo",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "express": "^4.18.2",
+    "fluent-json-schema": "^4.2.1",
+    "mongoose": "^8.2.2",
+    "nodemon": "^3.0.3",
+    "rxjs": "^7.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-model-validator": "^3.0.21",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/DeveloperSenior/discover-app/issues"
+  },
+  "homepage": "https://github.com/DeveloperSenior/discover-app#readme",
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
