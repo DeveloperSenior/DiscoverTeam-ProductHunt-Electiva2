@@ -4,17 +4,18 @@
 const express = require('express');
 const routerVersion = express.Router();
 const routersApp = require('./routes/config/SuscriptionRoutesAppConf');
-const {connectDB} = require('./db/config');
+const { connectDB } = require('./db/config/config');
 
 var app = express();
 
 
-connectDB().then(response => console.log(`Data base connect: host: ${response.host} Name: ${response.name}`)).catch(err => console.error('Error abriendo conexion a la base de datos',err));
+connectDB().then(response => console.log(`Data base connect: host: ${response.host} Name: ${response.name}`)).catch(err => console.error('Error abriendo conexion a la base de datos', err));
 
 /**
  * Se parsean los payload (Request y Response) a tipos JSON
  */
 app.use(express.json());
+
 /**
  * Lee las varibales de entorno del archivo .env solo ambiente local
  */
@@ -39,6 +40,5 @@ routerVersion.get('/version', (req, res) => {
 /**
  * Lista de routers que se van a exponer en el API
  */
-const apiRoutesList = [routerVersion, ...routersApp ];
-app.use(apiPath, ...apiRoutesList );
-  
+const apiRoutesList = [routerVersion, ...routersApp];
+app.use(apiPath, ...apiRoutesList);

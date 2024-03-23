@@ -2,7 +2,8 @@
  * Modulo que define los router a publicar en el contenedor
  */
 const routersApp = [
-    require('./SwaggerRouteConf')
+    require('./SwaggerRouteConf'),
+    require('../UserRoute')
     /** Import routes here */
 ];
 

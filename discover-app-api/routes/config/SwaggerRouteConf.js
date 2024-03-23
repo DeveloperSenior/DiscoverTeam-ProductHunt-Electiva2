@@ -4,6 +4,35 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerModelValidator =  require('swagger-model-validator');
 const router = express.Router();
 
+/**
+ * @swagger
+ * definitions:
+ *   DefaultException:
+ *     type: object
+ *     required:
+ *       - code
+ *       - type
+ *       - message
+ *       - exception
+ *     properties:
+ *       code:
+ *         type: string
+ *       type:
+ *         type: string
+ *       message:
+ *         type: string
+ *       exception:
+ *         type: string
+ *   ResponseMessageModel:
+ *     type: object
+ *     required:
+ *       - message
+ *     properties:
+ *       message:
+ *         type: string
+ *            
+ */
+
 const options = {
   failOnErrors: true,
   swaggerDefinition: {
@@ -25,7 +54,7 @@ const options = {
     host: 'localhost:3000',
     basePath: '/api/v1',
   },
-  apis: ['./routes/*.js'],
+  apis: ['./routes/*.js','./routes/config/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
