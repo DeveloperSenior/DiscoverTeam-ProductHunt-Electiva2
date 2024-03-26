@@ -1,7 +1,6 @@
 const express = require('express');
 const swaggerUi = require("swagger-ui-express");
 const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerModelValidator =  require('swagger-model-validator');
 const router = express.Router();
 
 /**
@@ -54,7 +53,7 @@ const options = {
     host: 'localhost:3000',
     basePath: '/api/v1',
   },
-  apis: ['./routes/*.js','./routes/config/*.js'],
+  apis: ['./src/routes/*.js','./src/routes/config/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -66,18 +65,5 @@ router.get('/json',  (req, res) => {
 });
 router.use('/api-docs', swaggerUi.serve);
 router.get('/api-docs', swaggerUi.setup(swaggerSpec));
-
-const validateModel = (name, model) => {
-  const responseValidation = swaggerSpec.validateModel(
-    name,
-    model,
-    false,
-    true
-  );
-  if (!responseValidation.valid) {
-    console.error(responseValidation.errors);
-    throw new Error(`Model doesn't match Swagger contract`);
-  }
-}
 
 module.exports = router

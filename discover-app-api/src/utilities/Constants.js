@@ -4,7 +4,8 @@ const HTTP_CODE = {
     CREATED: 201,
     OK: 200,
     NO_CONTENT: 204,
-    ERROR: 500
+    ERROR: 500,
+    MOVED_PERMANENTLY: 301
 }
 
 module.exports = {HTTP_CODE}

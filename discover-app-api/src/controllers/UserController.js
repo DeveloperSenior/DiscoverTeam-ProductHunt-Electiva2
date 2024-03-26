@@ -52,7 +52,7 @@ const getUsers = async (request, response = Response) => {
 
         const users = await userServicesInject.getUsers();
 
-        return response.status(HTTP_CODE.CREATED).json(users);
+        return response.status(HTTP_CODE.OK).json(users);
 
     }catch(error){
 
