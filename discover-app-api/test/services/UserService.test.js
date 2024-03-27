@@ -1,5 +1,6 @@
 const { User } = require('../../src/models/UserModel');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
+const bcrypt = require('bcrypt');
 
 describe("User Service", () => {
     beforeEach(() => {
@@ -26,8 +27,9 @@ describe("User Service", () => {
         /**
          * Mock param User to create
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
         const repository = require('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
@@ -41,8 +43,9 @@ describe("User Service", () => {
         /**
          * Mock param User to create
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
         jest.mock('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');
@@ -70,10 +73,13 @@ describe("User Service", () => {
         /**
          * Mock param User to retrieve list
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
+        const hashedTokenTwo = await bcrypt.hash('admin123341', 10);
+
         const listUsersMock = [new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build(), new User.Builder()
-                .withEmail('testUser2@gmail.com').withAccessToken(encodeBase64('admin123341'))
+                .withEmail('testUser2@gmail.com').withAccessToken(encodeBase64(hashedTokenTwo))
                 .withName('testUser2').withNickName('testUser2').build()];
         jest.mock('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');

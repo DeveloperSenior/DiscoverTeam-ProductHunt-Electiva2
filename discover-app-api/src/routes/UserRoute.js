@@ -21,6 +21,17 @@ const router = express.Router();
  *         type: string
  *       accessToken:
  *         type: string
+ * 
+ *   AuthModel:
+ *     type: object
+ *     required:
+ *       - email
+ *       - tokenId
+ *     properties:
+ *       email:
+ *         type: string
+ *       tokenId:
+ *         type: string
  *            
  */
 
@@ -86,5 +97,43 @@ router.get('/user', controller.getUsers);
  *           $ref: '#/definitions/DefaultException'
  */
 router.post('/user', controller.createUser);
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     description: login user
+ *     tags:
+ *       - User
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: user
+ *         description: user to authenticate
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/UserModel'
+ *     responses:
+ *       200:
+ *         description: user created
+ *         schema:
+ *           $ref: '#/definitions/AuthModel'
+ *       400:
+ *         description: bad request error body
+ *         schema:
+ *           items:
+ *              $ref: '#/definitions/ResponseMessageModel'
+ *           type: array
+ *       500:
+ *         description: internal server error
+ *         schema:
+ *           $ref: '#/definitions/DefaultException'
+ *       401:
+ *         description: Unauthorized
+ *         schema:
+ *           $ref: '#/definitions/DefaultException'
+ */
+router.post('/login', controller.login);
 
 module.exports = router

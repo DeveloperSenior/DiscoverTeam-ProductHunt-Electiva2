@@ -1,6 +1,6 @@
-const { Response } = require('express');
 const { HTTP_CODE } = require('../utilities/Constants');
 const { pipe } = require('../utilities/Utilities');
+const bcrypt = require('bcrypt');
 
 const userRepository = require('../db/UserRepository');
 const userService = require('../services/UserService');
@@ -9,7 +9,7 @@ const { validateUser } = require('../validators/UserValidator');
 
 const userServicesInject = pipe(userRepository, userService)(UserModel);
 
-const createUser = async (request, response = Response) => {
+const createUser = async (request, response) => {
 
     try {
 
@@ -28,11 +28,11 @@ const createUser = async (request, response = Response) => {
         const userBuilder = new User.Builder();
 
         const { name, nickName, email, accessToken } = body;
-
+        const hashedToken = await bcrypt.hash(accessToken, 10);
         const userCreate = userBuilder.withName(name)
             .withNickName(nickName)
             .withEmail(email)
-            .withAccessToken(accessToken).build();
+            .withAccessToken(hashedToken).build();
 
         await userServicesInject.createUser(userCreate);
 
@@ -46,10 +46,10 @@ const createUser = async (request, response = Response) => {
 
 }
 
-const getUsers = async (request, response = Response) => {
+const getUsers = async (request, response) => {
 
     try {
-
+        const { body } = request;
         const users = await userServicesInject.getUsers();
 
         return response.status(HTTP_CODE.OK).json(users);
@@ -61,4 +61,9 @@ const getUsers = async (request, response = Response) => {
     }
 }
 
-module.exports = { createUser, getUsers }
+const login = async (request, response) => {
+    const { body } = request;
+    return response.status(HTTP_CODE.UNAUTHORIZED).json(body);
+}
+
+module.exports = { createUser, getUsers, login }

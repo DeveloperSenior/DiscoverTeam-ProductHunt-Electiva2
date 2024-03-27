@@ -64,8 +64,8 @@ const userSchema = new Schema(
         _id: String,
         name: String,
         nickName: String,
-        email: String,
-        accessToken: String
+        email: { type: String, required: true },
+        accessToken: { type: String, required: true }
     }
 );
 

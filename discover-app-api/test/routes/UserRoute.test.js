@@ -6,6 +6,7 @@ const { UserModel, User } = require('../../src/models/UserModel');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const { HTTP_CODE } = require('../../src/utilities/Constants');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
+const bcrypt = require('bcrypt');
 
 beforeAll(() => {
 
@@ -30,7 +31,7 @@ const userMock = {
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
-    accessToken: 'YWRtaW4xMjM0NTY3'
+    accessToken: 'SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU='
 };
 
 /**
@@ -86,6 +87,7 @@ describe("GET /api/v1/user", () => {
                 expect(res.body).toStrictEqual([userMock]);
             });
     });
+
 });
 
 /**
@@ -96,8 +98,9 @@ describe("POST /api/v1/user", () => {
         /**
          * Mock request paylod body User to create
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
         createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('YWRtaW4xMjM0NTY3')
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
 
         /**
@@ -137,8 +140,9 @@ describe("POST /api/v1/user", () => {
         /**
          * Mock request paylod body User to create
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
         /**
         * Mock response created user with save function ODM mongoose
@@ -162,9 +166,11 @@ describe("POST /api/v1/user", () => {
         /**
          * Mock request paylod body User to create
          */
-        createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+        const hashedToken = await bcrypt.hash('admin123', 10);
+        const createUserMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
+
         /**
         * Mock response created user with save function ODM mongoose
         * true isn't monogo document return save function
@@ -183,5 +189,28 @@ describe("POST /api/v1/user", () => {
             });
     });
 
+    it("should Unauthorized user error code HTTP 401", async () => {
 
+        /**
+         * Mock request paylod body User to create
+         */
+        const hashedToken = await bcrypt.hash('admin123', 10);
+        createUserMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withName('testUser').withNickName('testUser').build();
+        /**
+         * Mock response Retrieve collection all user with find function ODM mongoose
+         */
+        mockingoose(UserModel).toReturn(userMock, 'findOne');
+        const tokenId = '';
+        /** Mock express app request*/
+        return request(app)
+            .post("/api/v1/login")
+            .send(createUserMock)
+            .expect('Content-Type', /json/)
+            .expect(HTTP_CODE.UNAUTHORIZED)
+            .then((res) => {
+                expect(res.statusCode).toBe(HTTP_CODE.UNAUTHORIZED);
+            });
+    });
 });

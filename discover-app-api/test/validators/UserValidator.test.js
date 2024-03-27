@@ -1,6 +1,7 @@
 const { validateUser } = require('../../src/validators/UserValidator');
 const { User } = require('../../src/models/UserModel');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
+const bcrypt = require('bcrypt');
 
 describe("User Validator Schema", () => {
 
@@ -8,8 +9,9 @@ describe("User Validator Schema", () => {
         /**
          * Mock request paylod body User validate
          */
+        const hashedToken = await bcrypt.hash('admin123', 10);
         const bodyMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
 
         const validate = validateUser(bodyMock);
@@ -39,7 +41,8 @@ describe("User Validator Schema", () => {
         /**
          * Mock request paylod body User validate
          */
-        const bodyMock = new User.Builder().withAccessToken(encodeBase64('admin123'))
+        const hashedToken = await bcrypt.hash('admin123', 10);
+        const bodyMock = new User.Builder().withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
 
         const validate = validateUser(bodyMock);
