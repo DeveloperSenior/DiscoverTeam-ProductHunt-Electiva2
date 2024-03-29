@@ -1,7 +1,8 @@
-const { UserModel, User } = require('../../src/models/UserModel');
+const { UserModel } = require('../../src/models/UserModel');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const mockingoose = require('mockingoose');
 const DefaultException = require('../../src/models/exception/DefaultException');
+const { User } = require('../../src/models/dto/User');
 
 /**
  * Mock user mongo document 

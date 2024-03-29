@@ -1,7 +1,9 @@
-const { UserModel, User } = require('../../src/models/UserModel');
+const { UserModel } = require('../../src/models/UserModel');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const mockingoose = require('mockingoose');
 const bcrypt = require('bcrypt');
+const { User } = require('../../src/models/dto/User');
+
 
 describe("User Controller", () => {
     beforeEach(() => {

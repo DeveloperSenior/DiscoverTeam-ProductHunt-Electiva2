@@ -2,11 +2,12 @@
 const mockingoose = require('mockingoose');
 const request = require("supertest");
 const app = require("../../app");
-const { UserModel, User } = require('../../src/models/UserModel');
+const { UserModel } = require('../../src/models/UserModel');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const { HTTP_CODE } = require('../../src/utilities/Constants');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
+const { User } = require('../../src/models/dto/User');
 
 beforeAll(() => {
 
@@ -99,7 +100,7 @@ describe("POST /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        createUserMock = new User.Builder()
+        const createUserMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
 
@@ -195,7 +196,7 @@ describe("POST /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        createUserMock = new User.Builder()
+        const loginUserMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
             .withName('testUser').withNickName('testUser').build();
         /**
@@ -206,7 +207,7 @@ describe("POST /api/v1/user", () => {
         /** Mock express app request*/
         return request(app)
             .post("/api/v1/login")
-            .send(createUserMock)
+            .send(loginUserMock)
             .expect('Content-Type', /json/)
             .expect(HTTP_CODE.UNAUTHORIZED)
             .then((res) => {

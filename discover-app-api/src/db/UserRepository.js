@@ -15,14 +15,23 @@ const UserRepository = UserModel => {
 
    const getUsers = async () =>{
       try {
-         return await UserModel.find().select("-_id -__v"); // Retrieve without __id and __v
+         return await UserModel.find().select("-_id -__v -accessToken"); // Retrieve without __id and __v
       } catch (e) {
          const excepcion = new DefaultException(e.message);
          throw excepcion;
       }
   }
 
-   return { createUser, getUsers }
+  const userAuth = async (email) =>{
+   try {
+      return await UserModel.findOne({email}).select("-_id -__v"); // Retrieve without __id and __v
+   } catch (e) {
+      const excepcion = new DefaultException(e.message);
+      throw excepcion;
+   }
+}
+
+   return { createUser, getUsers, userAuth }
 
 }
 

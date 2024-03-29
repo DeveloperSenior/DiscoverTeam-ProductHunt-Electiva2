@@ -1,5 +1,5 @@
 const { validateUser } = require('../../src/validators/UserValidator');
-const { User } = require('../../src/models/UserModel');
+const { User } = require('../../src/models/dto/User');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
 

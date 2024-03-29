@@ -1,9 +1,15 @@
-const {UserModel, User } = require('../../src/models/UserModel');
-const { encodeBase64, decodeBase64 } = require('../../src/utilities/Base64Util');
-const bcrypt = require('bcrypt');
 
+const { UserModel } = require('../../src/models/UserModel');
+const mockingoose = require('mockingoose');
+const { User } = require('../../src/models/dto/User');
+const { encodeBase64 } = require('../../src/utilities/Base64Util');
+const bcrypt = require('bcrypt');
+/**
+ * Mock user mongo document 
+ */
 const userMock = {
-    _id: 'testUser@gmail.com',
+    _id: '507f191e810c19729de860ea',
+    __v: 0,
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
@@ -11,24 +17,43 @@ const userMock = {
 };
 
 describe("User Model ", () => {
+    beforeEach(() => {
 
-    it('should create user model with builder method', async () => {
-
-        const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
-        .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
-        .withName('testUser').withNickName('testUser').build();
-        const isEquals = await bcrypt.compare(decodeBase64(createUserMock.accessToken), decodeBase64(userMock.accessToken));
-        expect(isEquals).toBe(false);
+        mockingoose(UserModel).toReturn(userMock, 'findOne');
+        mockingoose(UserModel).toReturn([userMock, userMock], 'find');
 
     });
 
-    it('should create user model with constructor method', async () => {
+    it("should Retrieve one User", async () => {
+        const user = await UserModel.findOne();
+        expect(user).toHaveProperty('_id');
+        expect(user).toHaveProperty('accessToken');
+    });
 
+    it("should Retrieve all User", async () => {
+        const user = await UserModel.find();
+        expect(user.length).toBe(2)
+    });
+
+    it("should save User", async () => {
+
+        /**
+         * Mock request paylod body User to create
+         */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User('testUser','testUser','testUser@gmail.com',hashedToken)
-        const isEquals = await bcrypt.compare(decodeBase64(createUserMock.accessToken), decodeBase64(userMock.accessToken));
-        expect(isEquals).toBe(false);
+        const createUserMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withName('testUser').withNickName('testUser').build();
+
+        /**
+        * Mock response created user with save function ODM mongoose
+        */
+        mockingoose(UserModel).toReturn(userMock, 'save');
+
+        const userCreate = await new UserModel(createUserMock).save();
+        const response = userCreate.toObject();
+        expect(response).toHaveProperty('_id');
+        expect(response).toStrictEqual(userMock);
 
     });
 
