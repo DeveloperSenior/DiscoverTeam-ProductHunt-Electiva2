@@ -22,7 +22,7 @@ const UserRepository = UserModel => {
       }
   }
 
-  const userAuth = async (email) =>{
+  const login = async (email) =>{
    try {
       return await UserModel.findOne({email}).select("-_id -__v"); // Retrieve without __id and __v
    } catch (e) {
@@ -31,7 +31,7 @@ const UserRepository = UserModel => {
    }
 }
 
-   return { createUser, getUsers, userAuth }
+   return { createUser, getUsers, login }
 
 }
 

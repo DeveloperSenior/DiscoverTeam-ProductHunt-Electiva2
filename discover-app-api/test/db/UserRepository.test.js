@@ -1,8 +1,8 @@
 const { UserModel } = require('../../src/models/UserModel');
-const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const mockingoose = require('mockingoose');
-const DefaultException = require('../../src/models/exception/DefaultException');
 const { User } = require('../../src/models/dto/User');
+const DefaultException = require('../../src/models/exception/DefaultException');
+
 
 /**
  * Mock user mongo document 
@@ -35,7 +35,7 @@ describe("User Repository DB", () => {
          * Mock param User to create
          */
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
         const UserRepository = require('../../src/db/UserRepository');
 
@@ -57,7 +57,7 @@ describe("User Repository DB", () => {
          * Mock param User to create
          */
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64('admin123'))
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
         const UserRepository = require('../../src/db/UserRepository');
         const isCreate = await UserRepository(UserModel).createUser(createUserMock);
@@ -84,6 +84,22 @@ describe("User Repository DB", () => {
         const UserRepository = require('../../src/db/UserRepository');
         const userList = await UserRepository(UserModel).getUsers();
         expect(userList).toHaveLength(1);
+
+    });
+
+    it("should not exist email and throw login exception", async () => {
+        /**
+         * Mock response all user list with find function ODM mongoose
+         */
+        const errorMessage = 'Error Retrieve user email';
+        mockingoose(UserModel).toReturn(new Error(errorMessage), 'findOne');
+        const UserRepository = require('../../src/db/UserRepository');
+        const emailMock = 'mock@mock.com';
+        expect.assertions(2);
+        await UserRepository(UserModel).login(emailMock).catch(error => {
+            expect(error).toBeInstanceOf(DefaultException);
+            expect(error.exception).toMatch(errorMessage);
+        });
 
     });
 

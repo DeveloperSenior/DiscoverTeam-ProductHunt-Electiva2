@@ -11,7 +11,7 @@ class User {
         this.nickName = nickName;
         this.email = email;
         this._id = email;
-        this.accessToken = accessToken ? encodeBase64(accessToken) : accessToken;
+        this.accessToken = accessToken ;
     }
     static Builder = class {
         constructor() {
@@ -41,7 +41,7 @@ class User {
         }
         withAccessToken(accessToken) {
 
-            this.user.accessToken = encodeBase64(accessToken);
+            this.user.accessToken = accessToken;
 
             return this;
 

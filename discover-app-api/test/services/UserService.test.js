@@ -1,7 +1,7 @@
 const { Auth } = require('../../src/models/dto/Auth');
 const { User } = require('../../src/models/dto/User');
-const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
+const DefaultException = require('../../src/models/exception/DefaultException');
 
 describe("User Service", () => {
     beforeEach(() => {
@@ -12,7 +12,7 @@ describe("User Service", () => {
             return {
                 createUser: jest.fn(() => false),
                 getUsers: jest.fn(() => []),
-                userAuth: jest.fn()
+                login: jest.fn()
             }
         });
 
@@ -31,7 +31,7 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         const repository = require('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
@@ -47,7 +47,7 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         jest.mock('../../src/db/UserRepository');
         const repository = require('../../src/db/UserRepository');
@@ -100,13 +100,16 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken)).build();
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken).build();
 
         const repository = require('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
-
-        const userFind = await UserService(repository()).login(filterUserMock);
-        expect(userFind).not.toHaveProperty('tokenId');
+        const errorMock = new DefaultException('Authentication failed: Email not exist.');
+        expect.assertions(2);
+        await UserService(repository()).login(filterUserMock).catch(error => {
+            expect(error).toBeInstanceOf(DefaultException);
+            expect(error.exception).toMatch(errorMock.exception);
+        });
 
     });
 
@@ -117,19 +120,21 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
         jest.mock('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');
         repository.mockImplementation(() => {
             return {
-                userAuth: jest.fn(() => filterUserMock)
+                login: jest.fn((user) => new User.Builder()
+                    .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
+                    .withName('testUser').withNickName('testUser').build())
             }
         });
-        const userAuthenticate = await UserService(repository()).login(filterUserMock);
-        expect(userAuthenticate).toHaveProperty('email');
-        expect(userAuthenticate).toHaveProperty('tokenId');
+        const loginenticate = await UserService(repository()).login(filterUserMock);
+        expect(loginenticate).toHaveProperty('email');
+        expect(loginenticate).toHaveProperty('tokenId');
 
     });
 
@@ -141,22 +146,42 @@ describe("User Service", () => {
         const hashedToken = await bcrypt.hash('admin123', 10);
         const hashedTokenDifferent = await bcrypt.hash('admin12345', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         const findUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedTokenDifferent))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedTokenDifferent)
             .withName('testUser').withNickName('testUser').build();
         jest.mock('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');
         repository.mockImplementation(() => {
             return {
-                userAuth: jest.fn(() => findUserMock)
+                login: jest.fn((user) => findUserMock)
             }
         });
-        const userUnauthorized = await UserService(repository()).login(filterUserMock);
-        expect(userUnauthorized).not.toHaveProperty('email');
-        expect(userUnauthorized).not.toHaveProperty('tokenId');
+        const errorMock = new DefaultException('Authentication failed: Incorrect password.');
+        expect.assertions(2);
+        await UserService(repository()).login(filterUserMock).catch(error => {
+            expect(error).toBeInstanceOf(DefaultException);
+            expect(error.exception).toMatch(errorMock.exception);
+        });
+
+    });
+
+    it("should throw an unhandled exception", async () => {
+
+        /**
+         * Mock param User to create
+         */
+        const hashedToken = await bcrypt.hash('admin123', 10);
+        const filterUserMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken).build();
+
+        const UserService = require('../../src/services/UserService');
+        expect.assertions(1);
+        await UserService(null).login(filterUserMock).catch(error => {
+            expect(error.message).toMatch('An unexpected exception was found in the application. Review details in the log');
+        });
 
     });
 

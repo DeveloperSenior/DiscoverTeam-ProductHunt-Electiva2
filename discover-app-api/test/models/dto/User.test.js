@@ -1,5 +1,4 @@
 const { User } = require('../../../src/models/dto/User');
-const { encodeBase64, decodeBase64 } = require('../../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
 
 const userMock = {
@@ -7,7 +6,7 @@ const userMock = {
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
-    accessToken: 'SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU='
+    accessToken: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
 };
 
 describe("User DTO ", () => {
@@ -16,9 +15,9 @@ describe("User DTO ", () => {
 
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-        .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+        .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
         .withName('testUser').withNickName('testUser').build();
-        const isEquals = await bcrypt.compare(decodeBase64(createUserMock.accessToken), decodeBase64(userMock.accessToken));
+        const isEquals = await bcrypt.compare(createUserMock.accessToken, userMock.accessToken);
         expect(isEquals).toBe(false);
 
     });
@@ -27,7 +26,7 @@ describe("User DTO ", () => {
 
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User('testUser','testUser','testUser@gmail.com',hashedToken)
-        const isEquals = await bcrypt.compare(decodeBase64(createUserMock.accessToken), decodeBase64(userMock.accessToken));
+        const isEquals = await bcrypt.compare(createUserMock.accessToken, userMock.accessToken);
         expect(isEquals).toBe(false);
 
     });

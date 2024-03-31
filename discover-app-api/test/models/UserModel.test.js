@@ -2,7 +2,6 @@
 const { UserModel } = require('../../src/models/UserModel');
 const mockingoose = require('mockingoose');
 const { User } = require('../../src/models/dto/User');
-const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
 /**
  * Mock user mongo document 
@@ -13,7 +12,7 @@ const userMock = {
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
-    accessToken: 'SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU='
+    accessToken: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
 };
 
 describe("User Model ", () => {
@@ -42,7 +41,7 @@ describe("User Model ", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
 
         /**

@@ -5,7 +5,6 @@ const app = require("../../app");
 const { UserModel } = require('../../src/models/UserModel');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const { HTTP_CODE } = require('../../src/utilities/Constants');
-const { encodeBase64 } = require('../../src/utilities/Base64Util');
 const bcrypt = require('bcrypt');
 const { User } = require('../../src/models/dto/User');
 
@@ -27,12 +26,12 @@ beforeAll(() => {
  * Mock user mongo document 
  */
 const userMock = {
-    _id: '507f191e810c19729de860ea',
+    _id: 'testUser@gmail.com',
     __v: 0,
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
-    accessToken: 'SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU='
+    accessToken: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
 };
 
 /**
@@ -101,7 +100,7 @@ describe("POST /api/v1/user", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
 
         /**
@@ -143,7 +142,7 @@ describe("POST /api/v1/user", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         /**
         * Mock response created user with save function ODM mongoose
@@ -169,7 +168,7 @@ describe("POST /api/v1/user", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
 
         /**
@@ -195,9 +194,8 @@ describe("POST /api/v1/user", () => {
         /**
          * Mock request paylod body User to create
          */
-        const hashedToken = await bcrypt.hash('admin123', 10);
         const loginUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
+            .withEmail('testUser@gmail.com').withAccessToken('admin12345')
             .withName('testUser').withNickName('testUser').build();
         /**
          * Mock response Retrieve collection all user with find function ODM mongoose

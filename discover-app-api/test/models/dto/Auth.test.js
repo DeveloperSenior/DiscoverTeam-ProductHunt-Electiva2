@@ -1,11 +1,9 @@
 const {Auth } = require('../../../src/models/dto/Auth');
 const bcrypt = require('bcrypt');
-const { decodeBase64 } = require('../../../src/utilities/Base64Util');
-
 
 const authMock = {
     email: 'testUser@gmail.com',
-    tokenId: 'SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU='
+    tokenId: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
 };
 
 describe("Auth DTO ", () => {
@@ -14,16 +12,16 @@ describe("Auth DTO ", () => {
 
 
         const createAuthMock = new Auth.Builder()
-        .withEmail('testUser@gmail.com').withTokenId('SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU=').build();
-        const isEquals = await bcrypt.compare(decodeBase64(createAuthMock.tokenId), decodeBase64(authMock.tokenId));
+        .withEmail('testUser@gmail.com').withTokenId('JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5').build();
+        const isEquals = await bcrypt.compare(createAuthMock.tokenId, authMock.tokenId);
         expect(isEquals).toBe(false);
 
     });
 
     it('should create auth dto with constructor method', async () => {
 
-        const createAuthMock = new Auth('testUser@gmail.com','SkRKaUpERXdKRE5VT0hKQlZuRXVSMlp4YTA1RlJFMTZURzV3V0U5Sk9GSjROVU5XYVdaQmQwVmtiRXhhV25vdVNFWTVTeTlaTmtORWVVeDU=')
-        const isEquals = await bcrypt.compare(decodeBase64(createAuthMock.tokenId), decodeBase64(authMock.tokenId));
+        const createAuthMock = new Auth('testUser@gmail.com','JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5')
+        const isEquals = await bcrypt.compare(createAuthMock.tokenId, authMock.tokenId);
         expect(isEquals).toBe(false);
 
     });
