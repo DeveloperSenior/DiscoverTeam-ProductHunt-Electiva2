@@ -4,7 +4,7 @@
   "description": "application that helps discover, launch and review products",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage --verbose --setupFiles dotenv/config --detectOpenHandles test/ --watch",
+    "test": "jest --coverage --verbose --setupFiles dotenv/config --detectOpenHandles test/",
     "runDev": "nodemon -r dotenv/config server.js"
   },
   "repository": {
