@@ -70,7 +70,7 @@ L README.md
 1. **Clonar el Repositorio:**
 ```bash
 git clone
-https://github.com/DeveloperSenior/discover-app.git
+https://github.com/DeveloperSenior/DiscoverTeam-ProductHunt-Electiva2.git
 ```
 2. **Instalar modulos de node:**
 ```bash
