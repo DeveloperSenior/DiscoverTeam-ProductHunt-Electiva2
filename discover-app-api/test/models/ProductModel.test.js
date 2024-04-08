@@ -1,6 +1,7 @@
 
 const mockingoose = require('mockingoose');
-
+const moment = require('moment');
+const { DATE_FORMAT } = require('../../src/utilities/Constants');
 const { ProductModel } = require('../../src/models/ProductModel');
 const { Product, InfoProduct, ImageMediaProduct, ExtrasProduct, PromoCodeProduct, LinkProduct, CategoryProduct } = require('../../src/models/dto/Product');
 /**
@@ -92,8 +93,11 @@ describe("Product Model ", () => {
         const extrasMock = new ExtrasProduct('Free', [new PromoCodeProduct('DEVPROMO', 'DEVPROMO', '2024-07-01')],
             ['I plan to seek VC funding in the near future.', 'I have raised venture-backed funding for this product.'],
             'MY FIRST COMMENT PRODUCT LAUNCH.');
+        const currentDate = moment().format(DATE_FORMAT.DEFAULT);
         const createProductMock = new Product.Builder()
             .withOwner('test@test.com')
+            .withUserCreate('test@test.com')
+            .withCreationDate(currentDate)
             .withInfo(infoProductMock).withImagesMedia(imagesMediaMock)
             .withMakers(makersMock)
             .withShoutouts(shoutoutsMock)
