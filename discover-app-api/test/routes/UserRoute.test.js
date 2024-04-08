@@ -7,6 +7,10 @@ const DefaultException = require('../../src/models/exception/DefaultException');
 const { HTTP_CODE } = require('../../src/utilities/Constants');
 const bcrypt = require('bcrypt');
 const { User } = require('../../src/models/dto/User');
+const jwt = require('jsonwebtoken');
+
+/** Mock middleware by default next true */
+jest.mock('../../src/middleware/AuthMiddleware', () => jest.fn((_, __, next) => next()));
 
 beforeAll(() => {
 
@@ -21,6 +25,7 @@ beforeAll(() => {
             return app
         }
     });
+
 });
 /**
  * Mock user mongo document 
@@ -31,14 +36,14 @@ const userMock = {
     name: 'testUser',
     nickName: "testUser",
     email: 'testUser@gmail.com',
-    accessToken: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
+    accessToken: 'JDJiJDEwJG1yYWxsNld1bHJwWHNZVWRZSDZhQWVGdFBkNGNYUm1lcnJmaHNXakFxL3I1UHVydlZqdm5h'
 };
 
 /**
  * Define test suite GET /api/v1/user
  */
 describe("GET /api/v1/user", () => {
-
+    beforeEach(() => jest.clearAllMocks());
     it("should return estatus code HTTP 200 OK", async () => {
         /**
          * Mock response Retrieve user with find function ODM mongoose
@@ -94,23 +99,27 @@ describe("GET /api/v1/user", () => {
  * Define test suite POST /api/v1/user
  */
 describe("POST /api/v1/user", () => {
+    beforeEach(() => jest.clearAllMocks());
     it("should return estatus code HTTP 201 CREATED", async () => {
         /**
          * Mock request paylod body User to create
          */
-        const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
+        const signinMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
 
         /**
         * Mock response created user with save function ODM mongoose
         */
         mockingoose(UserModel).toReturn(userMock, 'save');
+        /**
+        * Mock response user with findOne to login function ODM mongoose
+        */
+        mockingoose(UserModel).toReturn(userMock, 'findOne');
         /** Mock express app request*/
         return request(app)
             .post("/api/v1/user")
-            .send(createUserMock)
+            .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)
             .expect(HTTP_CODE.CREATED)
@@ -141,7 +150,7 @@ describe("POST /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         /**
@@ -152,7 +161,7 @@ describe("POST /api/v1/user", () => {
         /** Mock express app request*/
         return request(app)
             .post("/api/v1/user")
-            .send(createUserMock)
+            .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)
             .expect(HTTP_CODE.ERROR)
@@ -161,31 +170,35 @@ describe("POST /api/v1/user", () => {
             });
     });
 
-    it("should create a user", async () => {
+    it("should signin user", async () => {
 
         /**
          * Mock request paylod body User to create
          */
-        const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
+        const signinMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
 
         /**
         * Mock response created user with save function ODM mongoose
         * true isn't monogo document return save function
         */
-        mockingoose(UserModel).toReturn(createUserMock, 'save');
+        mockingoose(UserModel).toReturn(userMock, 'save');
+        /**
+         * Mock response user with findOne to login function ODM mongoose
+         */
+        mockingoose(UserModel).toReturn(userMock, 'findOne');
         /** Mock express app request*/
         return request(app)
             .post("/api/v1/user")
-            .send(createUserMock)
+            .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)
             .expect(HTTP_CODE.CREATED)
             .then((res) => {
                 expect(res.statusCode).toBe(HTTP_CODE.CREATED);
-                expect(res.body).toEqual(createUserMock);
+                expect(res.body.email).toEqual(signinMock.email);
+                expect(res.body).toHaveProperty('tokenId');
             });
     });
 
@@ -212,4 +225,34 @@ describe("POST /api/v1/user", () => {
                 expect(res.statusCode).toBe(HTTP_CODE.UNAUTHORIZED);
             });
     });
+
+    it("should Authorized user code HTTP 200", async () => {
+
+        /**
+         * Mock request paylod body User to create
+         */
+        const loginUserMock = new User.Builder()
+            .withEmail('testUser@gmail.com').withAccessToken('admin123')
+            .withName('testUser').withNickName('testUser').build();
+        /**
+         * Mock response Retrieve collection all user with find function ODM mongoose
+         */
+        mockingoose(UserModel).toReturn(userMock, 'findOne');
+
+        /** Mock JWT token */
+        const tokenIdMock = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTIwMjY3MTQsImV4cCI6MTcxMjAzMDMxNH0.u8CJrrrVI5MnW7IKOrTWi9Yk7gqYul2tIlTFd9_5iSA';
+        const sign = jest.spyOn(jwt, 'sign');
+        sign.mockImplementation(() => tokenIdMock);
+        /** Mock express app request*/
+        return request(app)
+            .post("/api/v1/login")
+            .send(loginUserMock)
+            .expect('Content-Type', /json/)
+            .expect(HTTP_CODE.OK)
+            .then((res) => {
+                expect(res.statusCode).toBe(HTTP_CODE.OK);
+                expect(res.body.tokenId).toBe(tokenIdMock);
+            });
+    });
+
 });

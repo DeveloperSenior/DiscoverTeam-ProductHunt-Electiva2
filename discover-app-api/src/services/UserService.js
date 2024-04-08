@@ -7,7 +7,7 @@ const DefaultException = require('../../src/models/exception/DefaultException');
 
 const UserService = userRepository => {
 
-    const createUser = async (user) => {
+    const signin = async (user) => {
 
         const userBuilder = new User.Builder();
 
@@ -17,8 +17,8 @@ const UserService = userRepository => {
             .withNickName(nickName)
             .withEmail(email)
             .withAccessToken(encodeBase64(hashedToken)).build();
-
-        return await userRepository.createUser(userCreate);
+        const resp =await userRepository.signin(userCreate);
+        return await login(user);
     }
 
     const getUsers = async () => {
@@ -28,6 +28,7 @@ const UserService = userRepository => {
     const login = async (user) => {
 
         try {
+
             const { email, accessToken } = user;
             const userResponse = await userRepository.login(email);
 
@@ -37,7 +38,7 @@ const UserService = userRepository => {
 
             }
 
-            const accessTokenMatch = await bcrypt.compare(accessToken, userResponse.accessToken);
+            const accessTokenMatch = await bcrypt.compare(accessToken, decodeBase64(userResponse.accessToken));
             const jwtSecret = decodeBase64(process.env.JWT_SECRET_KEY);
             const jwtExpires = process.env.JWT_EXPIRES;
 
@@ -48,7 +49,7 @@ const UserService = userRepository => {
 
             }
 
-            const token = jwt.sign({ userId: userResponse._id }, jwtSecret, {
+            const token = jwt.sign({ userId: userResponse._id, email: userResponse.email  }, jwtSecret, {
                 expiresIn: jwtExpires
             });
 
@@ -67,8 +68,8 @@ const UserService = userRepository => {
         }
     };
 
-    return { createUser, getUsers, login }
+    return { signin, getUsers, login }
 
 }
 
-module.exports = UserService
+module.exports = UserService;

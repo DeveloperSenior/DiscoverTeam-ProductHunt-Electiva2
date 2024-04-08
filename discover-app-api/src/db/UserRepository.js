@@ -2,7 +2,7 @@ const DefaultException = require('../models/exception/DefaultException')
 
 const UserRepository = UserModel => {
 
-   const createUser = async (user) => {
+   const signin = async (user) => {
       try {
          const newUser = new UserModel(user);
          await newUser.save();
@@ -31,7 +31,7 @@ const UserRepository = UserModel => {
    }
 }
 
-   return { createUser, getUsers, login }
+   return { signin, getUsers, login }
 
 }
 

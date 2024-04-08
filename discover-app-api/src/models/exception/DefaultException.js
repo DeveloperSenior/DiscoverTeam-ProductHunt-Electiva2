@@ -1,10 +1,13 @@
 "use strict";
 
+const { ERROR_CODE, ERROR_TYPE, ERROR_MESSAGE } = require('../../utilities/Constants');
+
+
 class DefaultException {
   constructor(exception) {
-    this.code = "API-01-001";
-    this.type = "Technical";
-    this.message ="An unexpected exception was found in the application. Review details in the log";
+    this.code = ERROR_CODE.DEFAULT;
+    this.type = ERROR_TYPE.DEFAULT;
+    this.message =ERROR_MESSAGE.DEFAULT;
     this.exception=exception;
   }
 }

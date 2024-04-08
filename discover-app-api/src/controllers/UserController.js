@@ -5,7 +5,7 @@ const userService = require('../services/UserService');
 const { UserModel } = require('../models/UserModel');
 const { validateUser } = require('../validators/UserValidator');
 
-const createUser = async (request, response) => {
+const signin = async (request, response) => {
 
     try {
         const userServicesInject = pipe(userRepository, userService)(UserModel);
@@ -21,12 +21,11 @@ const createUser = async (request, response) => {
 
         }
 
-        await userServicesInject.createUser(body);
+        const userCreated = await userServicesInject.signin(body);
 
-        return response.status(HTTP_CODE.CREATED).json(body);
+        return response.status(HTTP_CODE.CREATED).json(userCreated);
 
     } catch (error) {
-
         return response.status(HTTP_CODE.ERROR).json(error);
 
     }
@@ -82,4 +81,4 @@ const login = async (request, response) => {
     }
 }
 
-module.exports = { createUser, getUsers, login }
+module.exports = { signin, getUsers, login }

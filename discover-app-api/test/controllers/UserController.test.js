@@ -14,7 +14,7 @@ describe("User Controller", () => {
 
         service.mockImplementation(() => {
             return {
-                createUser: jest.fn(async (user) => { }),
+                signin: jest.fn(async (user) => { }),
                 getUsers: jest.fn(async () => []),
                 login: jest.fn(async (user) => { })
             }
@@ -25,7 +25,7 @@ describe("User Controller", () => {
 
         repository.mockImplementation(() => {
             return {
-                createUser: jest.fn(async (user) => false),
+                signin: jest.fn(async (user) => false),
                 getUsers: jest.fn(async () => []),
                 login: jest.fn(async (user) => { })
             }
@@ -38,13 +38,13 @@ describe("User Controller", () => {
         jest.clearAllMocks();
     });
 
-    it("should method been call createUser", async () => {
+    it("should method been call signin", async () => {
 
         /**
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
         const mockResponse = () => {
@@ -58,12 +58,10 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
-            req.body = createUserMock;
+            req.body = signinMock;
             return req;
         };
         const controller = require('../../src/controllers/UserController');
@@ -73,14 +71,14 @@ describe("User Controller", () => {
 
         service.mockImplementation(() => {
             return {
-                createUser: jest.fn(),
+                signin: jest.fn(),
                 getUsers: jest.fn(),
                 login: jest.fn()
             }
         });
 
-        const spyController = jest.spyOn(controller, 'createUser');
-        await controller.createUser(mockRequest(), mockResponse());
+        const spyController = jest.spyOn(controller, 'signin');
+        await controller.signin(mockRequest(), mockResponse());
         expect(spyController).toHaveBeenCalled();
 
     });
@@ -98,9 +96,7 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
             req.body = {};
@@ -114,7 +110,7 @@ describe("User Controller", () => {
 
         service.mockImplementation(() => {
             return {
-                createUser: jest.fn(),
+                signin: jest.fn(),
                 getUsers: jest.fn(),
                 login: jest.fn()
             }
@@ -138,9 +134,7 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
             req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
@@ -173,9 +167,7 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
             return req;
@@ -212,9 +204,7 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
             req.body = { accessToken: 'admin123' };
@@ -249,9 +239,7 @@ describe("User Controller", () => {
         };
         const mockRequest = () => {
             const req = {};
-            // replace the following () => req
-            // with your function stub/mock of choice
-            // making sure they still return `req`
+            
             req.status = () => req;
             req.json = () => req;
             req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };

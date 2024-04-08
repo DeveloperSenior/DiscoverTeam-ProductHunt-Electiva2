@@ -34,13 +34,13 @@ describe("User Repository DB", () => {
         /**
          * Mock param User to create
          */
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
         const UserRepository = require('../../src/db/UserRepository');
 
         try {
-            await UserRepository(UserModel).createUser(createUserMock);
+            await UserRepository(UserModel).signin(signinMock);
           } catch (error) {
             expect(error.code).toEqual('API-01-001');
           }
@@ -56,11 +56,11 @@ describe("User Repository DB", () => {
         /**
          * Mock param User to create
          */
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken('admin123')
             .withName('testUser').withNickName('testUser').build();
         const UserRepository = require('../../src/db/UserRepository');
-        const isCreate = await UserRepository(UserModel).createUser(createUserMock);
+        const isCreate = await UserRepository(UserModel).signin(signinMock);
         expect(isCreate).toBe(true);
 
     });

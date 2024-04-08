@@ -14,10 +14,10 @@ describe("User DTO ", () => {
     it('should create user dto with builder method', async () => {
 
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
         .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
         .withName('testUser').withNickName('testUser').build();
-        const isEquals = await bcrypt.compare(createUserMock.accessToken, userMock.accessToken);
+        const isEquals = await bcrypt.compare(signinMock.accessToken, userMock.accessToken);
         expect(isEquals).toBe(false);
 
     });
@@ -25,8 +25,8 @@ describe("User DTO ", () => {
     it('should create user dto with constructor method', async () => {
 
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User('testUser','testUser','testUser@gmail.com',hashedToken)
-        const isEquals = await bcrypt.compare(createUserMock.accessToken, userMock.accessToken);
+        const signinMock = new User('testUser','testUser','testUser@gmail.com',hashedToken)
+        const isEquals = await bcrypt.compare(signinMock.accessToken, userMock.accessToken);
         expect(isEquals).toBe(false);
 
     });

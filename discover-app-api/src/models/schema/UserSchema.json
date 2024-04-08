@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "properties": {
+      "name": {"type": "string", "nullable" : true},
+      "nickName": {"type": "string", "nullable" : true},
+      "email": {"type": "string", "nullable" : false},
+      "accessToken": {"type": "string", "nullable" : false}
+    },
+    "required": ["email","accessToken"]
+}

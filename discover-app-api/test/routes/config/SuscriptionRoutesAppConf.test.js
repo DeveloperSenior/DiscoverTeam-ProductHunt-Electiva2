@@ -3,7 +3,7 @@ describe("Suscription routes app config", () => {
 
     it("should return all suscription routes app", async () => {
         /** length validate equals a real import routes to app use */
-        expect(routersApp.length).toBe(2);
+        expect(routersApp.length).toBe(3);
     });
 
 });

@@ -40,7 +40,7 @@ describe("User Model ", () => {
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const createUserMock = new User.Builder()
+        const signinMock = new User.Builder()
             .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
             .withName('testUser').withNickName('testUser').build();
 
@@ -49,7 +49,7 @@ describe("User Model ", () => {
         */
         mockingoose(UserModel).toReturn(userMock, 'save');
 
-        const userCreate = await new UserModel(createUserMock).save();
+        const userCreate = await new UserModel(signinMock).save();
         const response = userCreate.toObject();
         expect(response).toHaveProperty('_id');
         expect(response).toStrictEqual(userMock);

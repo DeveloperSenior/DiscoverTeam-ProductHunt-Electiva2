@@ -2,11 +2,16 @@
  * Crear API expres con enrutadores propios
  */
 const express = require('express');
+const cors = require('cors');
 const routerVersion = express.Router();
 const routersApp = require('./src/routes/config/SuscriptionRoutesAppConf');
 
 var app = express();
 
+/**
+ * Habilita cors
+ */
+app.use(cors());
 /**
  * Se parsean los payload (Request y Response) a tipos JSON
  */
