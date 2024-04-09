@@ -21,7 +21,7 @@ const ERROR_TYPE = {
 
 const ERROR_MESSAGE = {
     DEFAULT: 'An unexpected exception was found in the application. Review details in the log',
-    ACCESS: 'An unexpected exception was found in the Access'
+    ACCESS: 'An unexpected exception was found in the Access, put valid Bearer token Authorization Header'
 }
 
 const HEADERS = {

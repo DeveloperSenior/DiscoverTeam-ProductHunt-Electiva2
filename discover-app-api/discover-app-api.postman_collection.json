@@ -1,0 +1,235 @@
+{
+	"info": {
+		"_postman_id": "1fceaacf-3711-47c7-9225-8090be029d66",
+		"name": "discover-app-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5751025"
+	},
+	"item": [
+		{
+			"name": "singin",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"UserTest\",\r\n  \"nickName\": \"testeito\",\r\n  \"email\": \"testeito@test.com\",\r\n  \"accessToken\": \"testeito123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"testeito@test.com\",\r\n  \"accessToken\": \"testeito123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all-user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlaXRvQHRlc3QuY29tIiwiaWF0IjoxNzEyNjcwOTMzLCJleHAiOjE3MTI3NTczMzN9.3EL6sEvHvrdIQBqC7FAFXg_PI-534oxw-R0hxna3t1k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createProduct",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlaXRvQHRlc3QuY29tIiwiaWF0IjoxNzEyNjcwOTMzLCJleHAiOjE3MTI3NTczMzN9.3EL6sEvHvrdIQBqC7FAFXg_PI-534oxw-R0hxna3t1k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"info\": {\r\n        \"name\": \"TestProduct\",\r\n        \"tags\": [\r\n            \"dev\",\r\n            \"software\"\r\n        ],\r\n        \"links\": [\r\n            {\r\n                \"link\": \"https://github/testProducto\",\r\n                \"socialMediaLink\": [\r\n                    {\r\n                        \"key\": \"twitter\",\r\n                        \"value\": \"@test_dev\"\r\n                    }\r\n                ]\r\n            }\r\n        ],\r\n        \"description\": \"Dev product to test\",\r\n        \"categories\": [\r\n            {\r\n                \"category\": \"Software\",\r\n                \"subCategory\": \"NodeJS\"\r\n            }\r\n        ],\r\n        \"isOpenSource\": true\r\n    },\r\n    \"imagesMedia\": {\r\n        \"linksImages\": [\r\n            \"https://images/1\",\r\n            \"https://images/2\",\r\n            \"https://images/3\"\r\n        ],\r\n        \"linkDemo\": \"https://demo-test/demo\",\r\n        \"linkVideo\": \"https://video-test/video\"\r\n    },\r\n    \"makers\": [\r\n        \"@developersenior\",\r\n        \"@developer\"\r\n    ],\r\n    \"shoutouts\": [\r\n        \"@developersenior\"\r\n    ],\r\n    \"extras\": {\r\n        \"pricing\": \"Free\",\r\n        \"promoCode\": [\r\n            {\r\n                \"description\": \"BlackPromo\",\r\n                \"code\": \"BLCK\",\r\n                \"expirationDate\": \"2024-04-07\"\r\n            }\r\n        ],\r\n        \"fundingInfo\": [\r\n            \"I plan to seek VC funding in the near future.\",\r\n            \"I have raised venture-backed funding for this product.\"\r\n        ],\r\n        \"firstComment\": \"MY FIRST COMMENT PRODUCT LAUNCH.\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/createProduct",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"createProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "launchProduct",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlaXRvQHRlc3QuY29tIiwiaWF0IjoxNzEyNjcwOTMzLCJleHAiOjE3MTI3NTczMzN9.3EL6sEvHvrdIQBqC7FAFXg_PI-534oxw-R0hxna3t1k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"_id\": \"66154a3305462eeb65ca0d88\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/launchProduct",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"launchProduct"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getMyProducts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlaXRvQHRlc3QuY29tIiwiaWF0IjoxNzEyNjcwOTMzLCJleHAiOjE3MTI3NTczMzN9.3EL6sEvHvrdIQBqC7FAFXg_PI-534oxw-R0hxna3t1k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/getMyProducts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"getMyProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getLaunchedProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/getLaunchedProducts/2/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"getLaunchedProducts",
+						"2",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -98,7 +98,7 @@ describe("GET /api/v1/user", () => {
 /**
  * Define test suite POST /api/v1/user
  */
-describe("POST /api/v1/user", () => {
+describe("POST/PUT /api/v1/user", () => {
     beforeEach(() => jest.clearAllMocks());
     it("should return estatus code HTTP 201 CREATED", async () => {
         /**
@@ -118,7 +118,7 @@ describe("POST /api/v1/user", () => {
         mockingoose(UserModel).toReturn(userMock, 'findOne');
         /** Mock express app request*/
         return request(app)
-            .post("/api/v1/user")
+            .put("/api/v1/signin")
             .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)
@@ -136,7 +136,7 @@ describe("POST /api/v1/user", () => {
         mockingoose(UserModel).toReturn(userMock, 'save');
         /** Mock express app request*/
         return request(app)
-            .post("/api/v1/user")
+            .put("/api/v1/signin")
             .expect('Content-Type', /json/)
             .expect(HTTP_CODE.BAD_REQUEST)
             .then((res) => {
@@ -160,7 +160,7 @@ describe("POST /api/v1/user", () => {
         mockingoose(UserModel).toReturn(true, 'save');
         /** Mock express app request*/
         return request(app)
-            .post("/api/v1/user")
+            .put("/api/v1/signin")
             .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)
@@ -190,7 +190,7 @@ describe("POST /api/v1/user", () => {
         mockingoose(UserModel).toReturn(userMock, 'findOne');
         /** Mock express app request*/
         return request(app)
-            .post("/api/v1/user")
+            .put("/api/v1/signin")
             .send(signinMock)
             .set("Accept", "application/json")
             .expect('Content-Type', /json/)

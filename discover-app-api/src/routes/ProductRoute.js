@@ -142,7 +142,7 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
 /**
  * @swagger
  * /createProduct:
- *   post:
+ *   put:
  *     security:
  *      - Authorization: []
  *     description: Create and launch new product
@@ -210,7 +210,7 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
-router.post('/createProduct',verifyTokenSession, controller.createProduct);
+router.put('/createProduct',verifyTokenSession, controller.createProduct);
 
 /**
  * @swagger

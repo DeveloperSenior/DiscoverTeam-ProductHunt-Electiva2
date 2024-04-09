@@ -93,8 +93,8 @@ router.get('/user', verifyTokenSession, controller.getUsers);
 
 /**
  * @swagger
- * /user:
- *   post:
+ * /signin:
+ *   put:
  *     security:
  *      - Authorization: []
  *     description: create user
@@ -140,7 +140,7 @@ router.get('/user', verifyTokenSession, controller.getUsers);
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
-router.post('/user', controller.signin);
+router.put('/signin', controller.signin);
 
 /**
  * @swagger
