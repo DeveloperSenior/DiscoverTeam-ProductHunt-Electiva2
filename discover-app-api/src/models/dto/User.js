@@ -1,17 +1,18 @@
 "use strict";
 
-const { encodeBase64 } = require('../../utilities/Base64Util');
-
 /**
  * User Model builder object
  */
 class User {
-    constructor(name, nickName, email, accessToken) {
-        this.name = name;
-        this.nickName = nickName;
+    constructor(_id, username, bio, avatar, email, password, createdAt, updatedAt) {
+        this._id = _id;
+        this.username = username;
+        this.bio = bio;
+        this.avatar = avatar;
         this.email = email;
-        this._id = email;
-        this.accessToken = accessToken ;
+        this.password = password ;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
     static Builder = class {
         constructor() {
@@ -19,34 +20,60 @@ class User {
             this.user = new User();
 
         }
-        withName(name) {
+        withId(_id) {
 
-            this.user.name = name;
+            this.user._id = _id;
 
             return this;
 
         }
-        withNickName(nickName) {
+        withUserName(userName) {
 
-            this.user.nickName = nickName;
+            this.user.userName = userName;
+
+            return this;
+
+        }
+        withBio(bio) {
+
+            this.user.bio = bio;
+
+            return this;
+
+        }
+        withAvatar(avatar){
+
+            this.user.avatar = avatar;
 
             return this;
 
         }
         withEmail(email) {
+
             this.user.email = email;
-            this.user._id = email; // _id in Mongodb Document
+            
             return this;
 
         }
-        withAccessToken(accessToken) {
+        withPassword(password) {
 
-            this.user.accessToken = accessToken;
+            this.user.password = password;
 
             return this;
 
         }
+        withCreatedAt(createdAt) {
 
+            this.user.createdAt = createdAt;
+            return this;
+
+        }
+        withUpdatedAt(updatedAt) {
+
+            this.user.updatedAt = updatedAt;
+            return this;
+
+        }
         build() {
 
             return this.user;

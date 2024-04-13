@@ -45,8 +45,8 @@ describe("User Controller", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
         const mockResponse = () => {
             const res = {};
             // replace the following () => res
@@ -137,7 +137,7 @@ describe("User Controller", () => {
             
             req.status = () => req;
             req.json = () => req;
-            req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
+            req.body = { email: 'testUser@gmail.com', password: 'admin123' };
             return req;
         };
         const authUser = { email: 'testUser@gmail.com', tokenId: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MTE4NTA4MzcsImV4cCI6MTcxMTg1NDQzN30.gInF0fCogGhQzO-kWVP9xis4_OGopuclZFM3HzRYcoI' }
@@ -207,7 +207,7 @@ describe("User Controller", () => {
             
             req.status = () => req;
             req.json = () => req;
-            req.body = { accessToken: 'admin123' };
+            req.body = { password: 'admin123' };
             return req;
         };
 
@@ -242,7 +242,7 @@ describe("User Controller", () => {
             
             req.status = () => req;
             req.json = () => req;
-            req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
+            req.body = { email: 'testUser@gmail.com', password: 'admin123' };
             return req;
         };
         //jest.mock('../../src/services/UserService');

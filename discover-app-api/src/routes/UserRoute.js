@@ -10,25 +10,32 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
  *   UserModel:
  *     type: object
  *     required:
- *       - name
- *       - nickName
+ *       - userName
+ *       - bio
+ *       - avatar
  *       - email
- *       - accessToken
+ *       - password
  *     properties:
- *       name:
+ *       userName:
  *         type: string
- *       nickName:
+ *       bio:
+ *         type: string
+ *       avatar:
  *         type: string
  *       email:
  *         type: string
- *       accessToken:
+ *       password:
+ *         type: string
+ *       createdAt:
+ *         type: string
+ *       updatedAt:
  *         type: string
  * 
  *   AuthModel:
  *     type: object
  *     required:
  *       - email
- *       - tokenId
+ *       - password
  *     properties:
  *       email:
  *         type: string
@@ -39,11 +46,11 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
  *     type: object
  *     required:
  *       - email
- *       - accessToken
+ *       - password
  *     properties:
  *       email:
  *         type: string
- *       accessToken:
+ *       password:
  *         type: string  
  */
 

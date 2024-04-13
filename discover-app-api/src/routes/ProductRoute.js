@@ -24,119 +24,24 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
  *           type: object
  *           $ref: '#/components/schemas/ProductModel'
  * 
- *   PromoCodeProductModel:
- *     type: object
- *     required:
- *       - code
- *       - description
- *       - expirationDate
- *     properties:
- *       code: 
- *         type: string
- *       description:
- *         type: string
- *       expirationDate:
- *         type: string
- * 
- *   ImageMediaProductModel:
- *     type: object
- *     required:
- *       - linksImages
- *       - linkDemo
- *       - linkVideo
- *     properties:
- *        linksImages:
- *           type: array
- *           items:
- *              type: string
- *        linkDemo:
- *           type: string
- *        linkVideo:
- *           type: string
- * 
- *   CategoryProductModel:
- *     type: object
- *     required:
- *        - category
- *        - subCategory
- *     properties:
- *        category: 
- *           type: string
- *        subCategory: 
- *           type: string
- * 
- *   LinkProduct:
- *      type: object
- *      required:
- *         - link
- *         - socialMediaLink
- *      properties:
- *         link:
- *           type: string
- *         socialMediaLink:
- *           type: array
- *           items:
- *             type: object
- *             required:
- *                - key
- *                - value
- *             properties:
- *                key: 
- *                 type: string
- *                value: 
- *                 type: string
- * 
- *   InfoProductModel:
- *      type: object
- *      required:
- *         - name
- *         - tags
- *         - links
- *         - description
- *         - categories
- *         - isOpenSource
- *      properties:
- *         name:
- *           type: string
- *         tags:
- *           items:
- *              type: string
- *           type: array
- *         description:
- *           type: string
- *         categories:
- *           type: array
- *           items:
- *             type: object
- *             $ref: '#/components/schemas/CategoryProductModel'
- *         isOpenSource:
- *             type: boolean
- * 
  *   ProductModel:
  *     type: object
  *     required:
- *       - info
- *       - imagesMedia
- *       - makers
- *       - extras
+ *       - name
+ *       - description
+ *       - url
+ *       - tags
  *     properties:
- *       info:
- *         type: object
- *         $ref: '#/components/schemas/InfoProductModel'
- *       imagesMedia:
- *         type: object
- *         $ref: '#/components/schemas/ImageMediaProductModel'
- *       makers:
+ *       name:
+ *         type: string
+ *       description:
+ *         type: string
+ *       url:
+ *         type: string
+ *       tags:
  *         type: array
  *         items:
  *           type: string
- *       shoutouts:
- *         type: array
- *         items:
- *           type: string
- *       extras:
- *          type: object
- *          $ref: '#/components/schemas/PromoCodeProductModel'
  */
 
 /**
@@ -157,28 +62,6 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
  *                  schema:
  *                      type: object
  *                      $ref: '#/components/schemas/ProductModel'
- *                  examples:
- *                      product:
- *                        summary: an example of a product
- *                        value:
- *                           info: 
- *                             name: TestProduct
- *                             tags: [ dev, software ]
- *                             links: [ { link: https://github/testProducto, socialMediaLink: [{key: twitter, value: '@test_dev'}] }]
- *                             description: Dev product to test
- *                             categories : [{ category: Software, subCategory: NodeJS }]
- *                             isOpenSource: true
- *                           imagesMedia:
- *                             linksImages: [ https://images/1, https://images/2, https://images/3] 
- *                             linkDemo: https://demo-test/demo
- *                             linkVideo: https://video-test/video
- *                           makers: [ '@developersenior', '@developer' ]
- *                           shoutouts: ['@developersenior']
- *                           extras:
- *                             pricing: Free  
- *                             promoCode: [{ description: BlackPromo, code: BLCK, expirationDate: '2024-04-07' }]
- *                             fundingInfo: [ 'I plan to seek VC funding in the near future.', 'I have raised venture-backed funding for this product.' ]
- *                             firstComment: MY FIRST COMMENT PRODUCT LAUNCH.
  *     responses:
  *       '201':
  *         description: Product created
@@ -316,7 +199,7 @@ router.get('/getMyProducts',verifyTokenSession, controller.findProductsByOwner);
 /**
  * @swagger
  * /getLaunchedProducts/{pageSize}/{pageNumber}:
- *   get:
+ *   post:
  *     security:
  *      - Authorization: []
  *     description: Retrieve all launched product
@@ -333,6 +216,13 @@ router.get('/getMyProducts',verifyTokenSession, controller.findProductsByOwner);
  *         type: integer
  *         required: true
  *         description: Numeric page number of the product to get.
+ *     requestBody:
+ *         required: false
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/ProductModel'
  *     produces:
  *       - application/json
  *     responses:
@@ -360,7 +250,94 @@ router.get('/getMyProducts',verifyTokenSession, controller.findProductsByOwner);
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
-router.get('/getLaunchedProducts/:pageSize/:pageNumber', controller.findLaunchedProductsPager);
+router.post('/getLaunchedProducts/:pageSize/:pageNumber', controller.findLaunchedProductsPager);
 
+/**
+ * @swagger
+ * /product/{_id}:
+ *   patch:
+ *     security:
+ *      - Authorization: []
+ *     description: Edit product by _id param
+ *     tags:
+ *       - Product
+ *     requestBody:
+ *         required: true
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/ProductModel'
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         type: string
+ *         required: true
+ *         description: _Id of the product to edit.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '201':
+ *         description: Product edited
+ *         content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ProductPagerModel'
+ *            type: object
+ *       '400':
+ *         description: bad request error body
+ *         content:
+ *          application/json: 
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ResponseMessageModel'
+ *             type: array
+ *       '500':
+ *         description: internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/DefaultException'
+ *             type: object
+ */
+router.patch('/product/:_id',verifyTokenSession, controller.editProduct);
+
+/**
+ * @swagger
+ * /product/{_id}:
+ *   delete:
+ *     security:
+ *      - Authorization: []
+ *     description: Remove product by _id param
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         type: string
+ *         required: true
+ *         description: _Id of the product to edit.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '201':
+ *         description: Product removed
+ *       '400':
+ *         description: bad request error body
+ *         content:
+ *          application/json: 
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ResponseMessageModel'
+ *             type: array
+ *       '500':
+ *         description: internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/DefaultException'
+ *             type: object
+ */
+router.delete('/product/:_id',verifyTokenSession, controller.removeProduct);
 
 module.exports = router;

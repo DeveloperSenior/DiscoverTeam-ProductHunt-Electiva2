@@ -11,17 +11,22 @@ const HTTP_CODE = {
 
 const ERROR_CODE = {
     DEFAULT: 'API-01-001',
-    ACCESS: 'API-02-001'
+    ACCESS: 'API-02-001',
+    VALIDATE: 'API-03-001'
 }
 
 const ERROR_TYPE = {
     DEFAULT: 'Technical',
-    ACCESS: 'Access'
+    ACCESS: 'Access',
+    VALIDATE: 'Validate'
 }
 
 const ERROR_MESSAGE = {
     DEFAULT: 'An unexpected exception was found in the application. Review details in the log',
-    ACCESS: 'An unexpected exception was found in the Access, put valid Bearer token Authorization Header'
+    ACCESS: 'An unexpected exception was found in the Access, put valid Bearer token Authorization Header',
+    PRODUCT_ISNT_SESSION: 'An unexpected exception was found in the validate product, the product does not belong to the user in session',
+    PRODUCT_NOT_FOUND: 'An unexpected exception was found in the validate product, the product does not found'
+
 }
 
 const HEADERS = {

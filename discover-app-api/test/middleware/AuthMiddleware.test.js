@@ -27,7 +27,7 @@ describe("AuthMiddleware", () => {
             req.header = jest.fn((header)=> tokenJWTMock)
             req.status = () => req;
             req.json = () => req;
-            req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
+            req.body = { email: 'testUser@gmail.com', password: 'admin123' };
             return req;
         };
         expect.assertions(2);
@@ -52,7 +52,7 @@ describe("AuthMiddleware", () => {
             req.header = jest.fn((header)=> tokenJWTMock)
             req.status = () => req;
             req.json = () => req;
-            req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
+            req.body = { email: 'testUser@gmail.com', password: 'admin123' };
             return req;
         };
         expect.assertions(2);
@@ -76,7 +76,7 @@ describe("AuthMiddleware", () => {
             req.header = jest.fn()
             req.status = () => req;
             req.json = () => req;
-            req.body = { email: 'testUser@gmail.com', accessToken: 'admin123' };
+            req.body = { email: 'testUser@gmail.com', password: 'admin123' };
             return req;
         };
         expect.assertions(2);

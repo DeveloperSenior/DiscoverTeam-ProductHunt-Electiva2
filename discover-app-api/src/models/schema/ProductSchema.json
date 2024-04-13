@@ -1,175 +1,31 @@
 {
   "type": "object",
   "properties": {
-    "info": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "nullable": false
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "nullable": false
-        },
-        "links": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "link": {
-                "type": "string"
-              },
-              "socialMediaLink": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "string"
-                    },
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "description": {
-          "type": "string",
-          "nullable": false
-        },
-        "categories": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "category": {
-                "type": "string",
-                "nullable": false
-              },
-              "subCategory": {
-                "type": "string",
-                "nullable": false
-              }
-            }
-          }
-        },
-        "isOpenSource": {
-          "type": "boolean",
-          "default": false
-        }
-      },
-      "nullable": false,
-      "required": [
-        "name",
-        "tags",
-        "links",
-        "description",
-        "categories",
-        "isOpenSource"
-      ]
+    "name": {
+      "type": "string",
+      "nullable": false
     },
-    "imagesMedia": {
-      "type": "object",
-      "properties": {
-        "linksImages": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "nullable": false
-        },
-        "linkDemo": {
-          "type": "string",
-          "nullable": true
-        },
-        "linkVideo": {
-          "type": "string",
-          "nullable": true
-        }
-      },
-      "required": [
-        "linksImages"
-      ]
+    "description": {
+      "type": "string",
+      "nullable": false
     },
-    "makers": {
+    "url": {
+      "type": "string",
+      "nullable": false
+    },    
+    "tags": {
       "type": "array",
       "items": {
         "type": "string"
       },
       "nullable": false
-    },
-    "shoutouts": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "nullable": true
-    },
-    "extras": {
-      "type": "object",
-      "properties": {
-        "pricing": {
-          "type": "string",
-          "nullable": false
-        },
-        "promoCode": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "code": {
-                "type": "string",
-                "nullable": false
-              },
-              "description": {
-                "type": "string",
-                "nullable": false
-              },
-              "expirationDate": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": false,
-                "errorMessage": "${0} must match format 'YYYY-MM-DD'"
-              }
-            },
-            "required": [
-              "code",
-              "description",
-              "expirationDate"
-            ]
-          }
-        },
-        "fundingInfo": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "nullable": true
-        },
-        "firstComment": {
-          "type": "string",
-          "nullable": true
-        }
-      },
-      "required": [
-        "pricing",
-        "promoCode",
-        "fundingInfo",
-        "firstComment"
-      ]
     }
+    
   },
   "required": [
-    "info",
-    "imagesMedia",
-    "makers",
-    "extras"
+    "name",
+    "description",
+    "url",
+    "tags"
   ]
 }

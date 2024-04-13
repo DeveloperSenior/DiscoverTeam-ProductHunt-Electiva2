@@ -14,6 +14,7 @@ const verifyTokenSession = (req, res, next) => {
         const arrayToken = token.split(" ");
         const decoded = jwt.verify(arrayToken[1], decodeBase64(process.env.JWT_SECRET_KEY));
         req.email = decoded.email;
+        req.userId = decoded.userId;
         next();
     } catch (error) {
         exception.exception = `Invalid token: ${error.message}`;

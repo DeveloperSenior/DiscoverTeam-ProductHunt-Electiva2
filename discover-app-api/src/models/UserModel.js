@@ -8,11 +8,14 @@ const { User } = require('./dto/User');
  */
 const userSchema = new Schema(
     {
-        _id: String,
-        name: String,
-        nickName: String,
-        email: { type: String, required: true },
-        accessToken: { type: String, required: true }
+        _id: Schema.Types.ObjectId,
+        userName: { type: String, required: true, index: true },
+        bio: String,
+        avatar: String,
+        email: { type: String, required: true, index: true, unique: true},
+        password: { type: String, required: true },
+        createdAt: { type: Date, required: true, index: true},
+        updatedAt: { type: Date, index: true}
     }
 );
 

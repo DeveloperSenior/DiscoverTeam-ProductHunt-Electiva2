@@ -10,28 +10,28 @@ describe("User Validator Schema", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const bodyMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         const validate = validateUser(bodyMock);
         expect(validate.isValid).toBe(true);
     });
 
-    it("should validate False User Schema, email & accessToken without schema object and return Error List", async () => {
+    it("should validate False User Schema, email & password without schema object and return Error List", async () => {
         /**
          * Mock request paylod body User validate
          */
         const bodyMock = new User.Builder()
-            .withName('testUser').withNickName('testUser').build();
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         const validate = validateUser(bodyMock);
         expect(validate.isValid).toBe(false);
         /**
-         * Validate email & accessToken without schema object
+         * Validate email & password without schema object
          */
         expect(validate.errors).toHaveLength(2);
         expect(validate.errors).toEqual(expect.arrayContaining(
-            ["must have required property 'accessToken'",
+            ["must have required property 'password'",
                 "must have required property 'email'"]));
 
     });
@@ -41,8 +41,8 @@ describe("User Validator Schema", () => {
          * Mock request paylod body User validate
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
-        const bodyMock = new User.Builder().withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+        const bodyMock = new User.Builder().withPassword(hashedToken)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         const validate = validateUser(bodyMock);
         expect(validate.isValid).toBe(false);
@@ -53,20 +53,20 @@ describe("User Validator Schema", () => {
         expect(validate.errors).toEqual(expect.arrayContaining(["must have required property 'email'"]));
     });
 
-    it("should validate False User Schema, accessToken without schema object and return Error List", async () => {
+    it("should validate False User Schema, password without schema object and return Error List", async () => {
         /**
          * Mock request paylod body User validate
          */
         const bodyMock = new User.Builder().withEmail('testUser@gmail.com')
-            .withName('testUser').withNickName('testUser').build();
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         const validate = validateUser(bodyMock);
         expect(validate.isValid).toBe(false);
         /**
-         * Validate accessToken without schema object
+         * Validate password without schema object
          */
         expect(validate.errors).toHaveLength(1);
-        expect(validate.errors).toEqual(expect.arrayContaining(["must have required property 'accessToken'"]));
+        expect(validate.errors).toEqual(expect.arrayContaining(["must have required property 'password'"]));
     });
 
 

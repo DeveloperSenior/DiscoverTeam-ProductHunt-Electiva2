@@ -3,16 +3,19 @@ const { UserModel } = require('../../src/models/UserModel');
 const mockingoose = require('mockingoose');
 const { User } = require('../../src/models/dto/User');
 const bcrypt = require('bcrypt');
+const moment = require('moment');
+const { DATE_FORMAT } = require('../../src/utilities/Constants');
 /**
  * Mock user mongo document 
  */
-const userMock = {
-    _id: '507f191e810c19729de860ea',
-    __v: 0,
-    name: 'testUser',
-    nickName: "testUser",
-    email: 'testUser@gmail.com',
-    accessToken: 'JDJiJDEwJDNUOHJBVnEuR2Zxa05FRE16TG5wWE9JOFJ4NUNWaWZBd0VkbExaWnouSEY5Sy9ZNkNEeUx5'
+const userMock =     {
+    _id: "6615b9d07547e0fc5387077c",
+    userName: "testUser",
+    bio: "Developer",
+    avatar: "http://avatar/andres.png",
+    email: "testUser@gmail.com",
+    password: "JDJiJDEwJDVFTWVnQ0NvR0NKRGd0d2QvamVUc2UwUVkvak13VVEwRE9Wa1U4MXdzQ203Z0ZYZmhkMW11",
+    createdAt: "2024-04-09T00:00:00.000Z"
 };
 
 describe("User Model ", () => {
@@ -26,7 +29,7 @@ describe("User Model ", () => {
     it("should Retrieve one User", async () => {
         const user = await UserModel.findOne();
         expect(user).toHaveProperty('_id');
-        expect(user).toHaveProperty('accessToken');
+        expect(user).toHaveProperty('password');
     });
 
     it("should Retrieve all User", async () => {
@@ -40,9 +43,11 @@ describe("User Model ", () => {
          * Mock request paylod body User to create
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
+        const currentDate = moment().format(DATE_FORMAT.DEFAULT);
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken)
+            .withCreatedAt(currentDate)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         /**
         * Mock response created user with save function ODM mongoose
@@ -52,7 +57,7 @@ describe("User Model ", () => {
         const userCreate = await new UserModel(signinMock).save();
         const response = userCreate.toObject();
         expect(response).toHaveProperty('_id');
-        expect(response).toStrictEqual(userMock);
+        expect(response._id.toString()).toEqual(userMock._id);
 
     });
 

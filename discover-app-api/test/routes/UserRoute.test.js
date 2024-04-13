@@ -30,14 +30,17 @@ beforeAll(() => {
 /**
  * Mock user mongo document 
  */
-const userMock = {
-    _id: 'testUser@gmail.com',
-    __v: 0,
-    name: 'testUser',
-    nickName: "testUser",
-    email: 'testUser@gmail.com',
-    accessToken: 'JDJiJDEwJG1yYWxsNld1bHJwWHNZVWRZSDZhQWVGdFBkNGNYUm1lcnJmaHNXakFxL3I1UHVydlZqdm5h'
-};
+const userMock =
+    {
+        _id: "6615b9d07547e0fc5387077c",
+        userName: "testUser",
+        bio: "Developer",
+        avatar: "http://avatar/andres.png",
+        email: "testUser@gmail.com",
+        password: "JDJiJDEwJDVFTWVnQ0NvR0NKRGd0d2QvamVUc2UwUVkvak13VVEwRE9Wa1U4MXdzQ203Z0ZYZmhkMW11",
+        createdAt: "2024-04-09T00:00:00.000Z"
+    }
+;
 
 /**
  * Define test suite GET /api/v1/user
@@ -105,8 +108,8 @@ describe("POST/PUT /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword('admin123')
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
 
         /**
         * Mock response created user with save function ODM mongoose
@@ -151,8 +154,9 @@ describe("POST/PUT /api/v1/user", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
         /**
         * Mock response created user with save function ODM mongoose
         * true isn't monogo document return save function
@@ -176,8 +180,9 @@ describe("POST/PUT /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+        .withEmail('testUser@gmail.com').withPassword('admin123')
+        .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
 
         /**
         * Mock response created user with save function ODM mongoose
@@ -208,8 +213,9 @@ describe("POST/PUT /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const loginUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin12345')
-            .withName('testUser').withNickName('testUser').build();
+        .withEmail('testUser@gmail.com').withPassword('admin123123')
+        .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
         /**
          * Mock response Retrieve collection all user with find function ODM mongoose
          */
@@ -232,8 +238,9 @@ describe("POST/PUT /api/v1/user", () => {
          * Mock request paylod body User to create
          */
         const loginUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+        .withEmail('testUser@gmail.com').withPassword('admin123')
+        .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
         /**
          * Mock response Retrieve collection all user with find function ODM mongoose
          */

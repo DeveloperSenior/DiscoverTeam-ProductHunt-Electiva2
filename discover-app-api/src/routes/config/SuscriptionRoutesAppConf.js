@@ -4,7 +4,8 @@
 const routersApp = [
     require('./SwaggerRouteConf'),
     require('../UserRoute'),
-    require('../ProductRoute')
+    require('../ProductRoute'),
+    require('../RateProductRoute')
     /** Import routes here */
 ];
 

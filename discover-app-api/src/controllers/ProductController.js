@@ -3,9 +3,19 @@ const { HTTP_CODE } = require('../utilities/Constants');
 const productRepository = require('../db/ProductRepository');
 const productService = require('../services/ProductService');
 const { ProductModel } = require('../models/ProductModel');
-const { validateProduct, validateProductLaunch } = require('../validators/ProductValidator');
+const { validateProduct,
+        validateProductLaunch,
+        validateEditProduct,
+        validateRemoveProduct
+      } = require('../validators/ProductValidator');
 const { getSession } = require('../utilities/Utilities');
 
+/**
+ * create Product
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
 const createProduct = async (request, response) => {
 
     try {
@@ -35,6 +45,12 @@ const createProduct = async (request, response) => {
 
 }
 
+/**
+ * launch Product
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
 const launchProduct = async (request, response) => {
 
     try {
@@ -62,6 +78,12 @@ const launchProduct = async (request, response) => {
 
 }
 
+/**
+ * find Products By Owner
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
 const findProductsByOwner = async (request, response) => {
     try {
         const productServicesInject = pipe(productRepository, productService)(ProductModel);
@@ -78,18 +100,24 @@ const findProductsByOwner = async (request, response) => {
     }
 }
 
+/**
+ * findLaunched Products Pager
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
 const findLaunchedProductsPager = async (request, response) => {
 
     try {
+        const {params, body} = request;
+        const { pageSize, pageNumber } = params;
 
-        const { pageSize, pageNumber } = request.params;
-
-        if ( !pageSize ) pageSize = 5;
-        if ( !pageNumber ) pageNumber = 1
+        if (!pageSize) pageSize = 5;
+        if (!pageNumber) pageNumber = 1;
 
         const productServicesInject = pipe(productRepository, productService)(ProductModel);
 
-        const allLaunchedProducts = await productServicesInject.findLaunchedProductsPager(pageSize,pageNumber);
+        const allLaunchedProducts = await productServicesInject.findLaunchedProductsPager(pageSize, pageNumber, body);
 
         return response.status(HTTP_CODE.OK).json(allLaunchedProducts);
 
@@ -101,4 +129,80 @@ const findLaunchedProductsPager = async (request, response) => {
 
 }
 
-module.exports = { createProduct, launchProduct, findProductsByOwner, findLaunchedProductsPager }
+/**
+ * edit Product
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const editProduct = async (request, response) => {
+
+    try {
+        const { body, params } = request;
+        const { _id } = params;
+        const userSession = getSession(request);
+
+        // Validate product Model to edit
+        const validate = validateEditProduct(_id,body);
+
+        if (!validate.isValid) {
+
+            // if validation failure, send error response
+            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+
+        }
+
+        const productServicesInject = pipe(productRepository, productService)(ProductModel);
+
+        const editedProduct = await productServicesInject.editProduct(_id, body, userSession);
+
+        return response.status(HTTP_CODE.CREATED).json(editedProduct);
+
+    } catch (error) {
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+
+}
+
+/**
+ * remove Product
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const removeProduct = async (request, response) => {
+    try {
+        const { params } = request;
+        const { _id } = params;
+        const userSession = getSession(request);
+
+        // Validate product Model to remove
+        const validate = validateRemoveProduct(_id);
+
+        if (!validate.isValid) {
+
+            // if validation failure, send error response
+            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+
+        }
+
+        const productServicesInject = pipe(productRepository, productService)(ProductModel);
+
+        await productServicesInject.removeProduct(_id, userSession);
+
+        return response.status(HTTP_CODE.CREATED).send();
+
+    } catch (error) {
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+}
+
+module.exports = { createProduct,
+                   launchProduct,
+                   findProductsByOwner,
+                   findLaunchedProductsPager,
+                   editProduct,
+                   removeProduct
+                 }

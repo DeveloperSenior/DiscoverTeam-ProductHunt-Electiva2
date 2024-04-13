@@ -1,10 +1,14 @@
-const DefaultException = require('../models/exception/DefaultException')
+const DefaultException = require('../models/exception/DefaultException');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
-const UserRepository = UserModel => {
+
+const UserRepository = DbModel => {
 
    const signin = async (user) => {
       try {
-         const newUser = new UserModel(user);
+         user._id = new ObjectId;
+         const newUser = new DbModel(user);
          await newUser.save();
          return true;
       } catch (e) {
@@ -15,7 +19,7 @@ const UserRepository = UserModel => {
 
    const getUsers = async () =>{
       try {
-         return await UserModel.find().select("-_id -__v -accessToken"); // Retrieve without __id and __v
+         return await DbModel.find().select("-__v"); // Retrieve without __v
       } catch (e) {
          const excepcion = new DefaultException(e.message);
          throw excepcion;
@@ -24,7 +28,7 @@ const UserRepository = UserModel => {
 
   const login = async (email) =>{
    try {
-      return await UserModel.findOne({email}).select("-_id -__v"); // Retrieve without __id and __v
+      return await DbModel.findOne({email}).select("-__v"); // Retrieve without __id and __v
    } catch (e) {
       const excepcion = new DefaultException(e.message);
       throw excepcion;

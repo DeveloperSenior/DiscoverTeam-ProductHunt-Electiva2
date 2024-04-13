@@ -1,83 +1,20 @@
 "use strict";
 
-class LinkProduct {
-
-    constructor(link, socialMediaLink) {
-        this.link = link;
-        this.socialMediaLink = socialMediaLink;
-    }
-
-}
-
-class CategoryProduct {
-
-    constructor(category, subCategory) {
-        this.category = category;
-        this.subCategory = subCategory;
-    }
-
-}
-
-class InfoProduct {
-
-    constructor(name, tags, links, description, categories, isOpenSource) {
-        this.name = name;
-        this.isOpenSource = isOpenSource
-        this.tags = tags;
-        this.links = links;
-        this.description = description;
-        this.categories = categories;
-    }
-
-}
-
-class ImageMediaProduct {
-
-    constructor(linksImages, linkDemo, linkVideo) {
-        this.linksImages = linksImages;
-        this.linkDemo = linkDemo;
-        this.linkVideo = linkVideo;
-    }
-
-}
-
-class PromoCodeProduct {
-
-    constructor(description, code, expirationDate) {
-        this.description = description;
-        this.code = code;
-        this.expirationDate = expirationDate;
-    }
-
-}
-
-class ExtrasProduct {
-    constructor(pricing, promoCode, fundingInfo, firstComment) {
-        this.pricing = pricing;
-        this.promoCode = promoCode;
-        this.fundingInfo = fundingInfo;
-        this.firstComment = firstComment;
-
-    }
-
-}
-
 /**
  * Product Model builder object
  */
 class Product {
-    constructor(_id, owner, info, imagesMedia, makers, shoutouts, extras) {
-        this._id = _id;
-        this.owner = owner;
-        this.userCreate = null;
-        this.creationDate = null;
-        this.userUpdate = null;
-        this.launchDate = null;
-        this.info = info;
-        this.imagesMedia = imagesMedia;
-        this.makers = makers;
-        this.shoutouts = shoutouts;
-        this.extras = extras;
+    constructor(_id, name, description, url, tags, state, user, createdAt, updatedAt, launchAt) {
+       this._id = _id;
+       this.name = name;
+       this.description = description;
+       this.url = url;
+       this.tags = tags;
+       this.state = state;
+       this.user = user;
+       this.createdAt = createdAt;
+       this.updatedAt = updatedAt;
+       this.launchAt = launchAt;
     }
     static Builder = class {
         constructor() {
@@ -89,60 +26,47 @@ class Product {
             this.product._id = _id;
             return this;
         }
-        withUserCreate(userCreate) {
-            this.product.userCreate = userCreate;
+        withName(name) {
+            this.product.name = name;
             return this;
         }
-        withCreationDate(creationDate){
-            this.product.creationDate = creationDate;
+        withDescription(description){
+            this.product.description = description;
             return this;
         }
-        withUserUpdate(userUpdate) {
-            this.product.userUpdate = userUpdate;
+        withUrl(url) {
+            this.product.url = url;
             return this;
         }
-        withLaunchDate(launchDate){
-            this.product.launchDate = launchDate;
+        withTags(tags){
+            this.product.tags = tags;
             return this;
         }
-        withOwner(owner) {
-
-            this.product.owner = owner;
-
+        withState(state){
+            this.product.state = state;
             return this;
-
         }
-        withInfo(info) {
-
-            this.product.info = info;
-
+        withUser(user){
+            this.product.user = user;
             return this;
-
         }
-        withImagesMedia(imagesMedia) {
+        withCreatedAt(createdAt) {
 
-            this.product.imagesMedia = imagesMedia;
+            this.product.createdAt = createdAt;
 
             return this;
 
         }
-        withMakers(makers) {
+        withUpdatedAt(updatedAt) {
 
-            this.product.makers = makers;
-
-            return this;
-
-        }
-        withShoutouts(shoutouts) {
-
-            this.product.shoutouts = shoutouts;
+            this.product.updatedAt = updatedAt;
 
             return this;
 
         }
-        withExtras(extras) {
+        withLaunchdAt(launchAt) {
 
-            this.product.extras = extras;
+            this.product.launchAt = launchAt;
 
             return this;
 
@@ -156,4 +80,4 @@ class Product {
     };
 }
 
-module.exports = { Product, InfoProduct, CategoryProduct, LinkProduct, ImageMediaProduct, PromoCodeProduct, ExtrasProduct }
+module.exports = { Product }

@@ -8,12 +8,13 @@ const tokenJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRldkBnbWFpb
  * Mock user mongo document 
  */
 const userMock = {
-    _id: 'testUser@gmail.com',
-    __v: 0,
-    name: 'testUser',
-    nickName: "testUser",
-    email: 'testUser@gmail.com',
-    accessToken: 'JDJiJDEwJG1yYWxsNld1bHJwWHNZVWRZSDZhQWVGdFBkNGNYUm1lcnJmaHNXakFxL3I1UHVydlZqdm5h'
+    _id: "6615b9d07547e0fc5387077c",
+    userName: "testUser",
+    bio: "Developer",
+    avatar: "http://avatar/andres.png",
+    email: "testUser@gmail.com",
+    password: "JDJiJDEwJDVFTWVnQ0NvR0NKRGd0d2QvamVUc2UwUVkvak13VVEwRE9Wa1U4MXdzQ203Z0ZYZmhkMW11",
+    createdAt: "2024-04-09T00:00:00.000Z"
 };
 describe("User Service", () => {
     beforeEach(() => {
@@ -42,8 +43,9 @@ describe("User Service", () => {
          * Mock param User to create
          */
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword('admin123')
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
         const repository = require('../../src/db/UserRepository');
         repository.mockImplementation(() => {
             return {
@@ -67,15 +69,16 @@ describe("User Service", () => {
          * Mock param User to create
          */
         const signinMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword('admin123')
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+
         jest.mock('../../src/db/UserRepository');
         const repository = require('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
         repository.mockImplementation(() => {
             return {
                 signin: jest.fn(() => true),
-                login: jest.fn(() => { return userMock})
+                login: jest.fn(() => { return userMock })
             }
         });
         const signinResponse = await UserService(repository()).signin(signinMock);
@@ -98,9 +101,10 @@ describe("User Service", () => {
          */
         const listUsersMock = [new User.Builder()
             .withEmail('testUser@gmail.com')
-            .withName('testUser').withNickName('testUser').build(), new User.Builder()
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build()
+            , new User.Builder()
                 .withEmail('testUser2@gmail.com')
-                .withName('testUser2').withNickName('testUser2').build()];
+                .withUserName('testUser2').withBio('Developer2').withAvatar('http://avatar/andres2.png').build()];
 
         jest.mock('../../src/db/UserRepository');
 
@@ -121,7 +125,7 @@ describe("User Service", () => {
          * Mock param User to create
          */
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123').build();
+            .withEmail('testUser@gmail.com').withPassword('admin123').build();
 
         const repository = require('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
@@ -141,16 +145,17 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken('admin123')
-            .withName('testUser').withNickName('testUser').build();
+        .withEmail('testUser@gmail.com').withPassword('admin123')
+        .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
+;
         jest.mock('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');
         repository.mockImplementation(() => {
             return {
                 login: jest.fn((user) => new User.Builder()
-                    .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedToken))
-                    .withName('testUser').withNickName('testUser').build())
+                    .withEmail('testUser@gmail.com').withPassword(encodeBase64(hashedToken))
+                    .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build())
             }
         });
         const loginenticate = await UserService(repository()).login(filterUserMock);
@@ -167,11 +172,11 @@ describe("User Service", () => {
         const hashedToken = await bcrypt.hash('admin123', 10);
         const hashedTokenDifferent = await bcrypt.hash('admin12345', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken)
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken)
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
         const findUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(encodeBase64(hashedTokenDifferent))
-            .withName('testUser').withNickName('testUser').build();
+            .withEmail('testUser@gmail.com').withPassword(encodeBase64(hashedTokenDifferent))
+            .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
         jest.mock('../../src/db/UserRepository');
         const UserService = require('../../src/services/UserService');
         const repository = require('../../src/db/UserRepository');
@@ -196,7 +201,7 @@ describe("User Service", () => {
          */
         const hashedToken = await bcrypt.hash('admin123', 10);
         const filterUserMock = new User.Builder()
-            .withEmail('testUser@gmail.com').withAccessToken(hashedToken).build();
+            .withEmail('testUser@gmail.com').withPassword(hashedToken).build();
 
         const UserService = require('../../src/services/UserService');
         expect.assertions(1);

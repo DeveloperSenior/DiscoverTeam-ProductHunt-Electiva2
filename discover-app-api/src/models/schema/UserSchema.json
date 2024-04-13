@@ -1,10 +1,11 @@
 {
     "type": "object",
     "properties": {
-      "name": {"type": "string", "nullable" : true},
-      "nickName": {"type": "string", "nullable" : true},
+      "userName": {"type": "string", "nullable" : true},
+      "bio": {"type": "string", "nullable" : true},
+      "avatar": {"type": "string", "nullable" : true},
       "email": {"type": "string", "nullable" : false},
-      "accessToken": {"type": "string", "nullable" : false}
+      "password": {"type": "string", "nullable" : false}
     },
-    "required": ["email","accessToken"]
+    "required": ["email","password"]
 }

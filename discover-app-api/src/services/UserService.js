@@ -4,19 +4,23 @@ const { User } = require('../models/dto/User');
 const { encodeBase64, decodeBase64 } = require('../utilities/Base64Util');
 const jwt = require('jsonwebtoken');
 const DefaultException = require('../../src/models/exception/DefaultException');
+const moment = require('moment');
+const { DATE_FORMAT } = require('../utilities/Constants');
 
 const UserService = userRepository => {
 
     const signin = async (user) => {
 
         const userBuilder = new User.Builder();
-
-        const { name, nickName, email, accessToken } = user;
-        const hashedToken = await bcrypt.hash(accessToken, 10);
-        const userCreate = userBuilder.withName(name)
-            .withNickName(nickName)
-            .withEmail(email)
-            .withAccessToken(encodeBase64(hashedToken)).build();
+        const currentDate = moment().format(DATE_FORMAT.DEFAULT);
+        const { userName, bio, avatar, email, password } = user;
+        const hashedToken = await bcrypt.hash(password, 10);
+        const userCreate = userBuilder.withUserName(userName)
+                .withBio(bio)
+                .withAvatar(avatar)
+                .withEmail(email)
+                .withPassword(encodeBase64(hashedToken))
+                .withCreatedAt(currentDate).build();
         const resp =await userRepository.signin(userCreate);
         return await login(user);
     }
@@ -29,7 +33,7 @@ const UserService = userRepository => {
 
         try {
 
-            const { email, accessToken } = user;
+            const { email, password } = user;
             const userResponse = await userRepository.login(email);
 
             if (!userResponse) {
@@ -38,7 +42,7 @@ const UserService = userRepository => {
 
             }
 
-            const accessTokenMatch = await bcrypt.compare(accessToken, decodeBase64(userResponse.accessToken));
+            const accessTokenMatch = await bcrypt.compare(password, decodeBase64(userResponse.password));
             const jwtSecret = decodeBase64(process.env.JWT_SECRET_KEY);
             const jwtExpires = process.env.JWT_EXPIRES;
 

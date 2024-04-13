@@ -29,4 +29,23 @@ const validateProductLaunch = (body) => {
         return { isValid: true, errors: [] }
 }
 
-module.exports = { validateProduct, validateProductLaunch }
+const validateEditProduct = (_id, body) => {
+    const errors = [];
+    let isValid = true;
+    if (!body) { errors.push("must have required body request"); isValid = false; }
+    if (!_id) { errors.push("must have required property path '_id'"); isValid = false; }
+
+    return { isValid: isValid, errors: errors }
+
+}
+
+const validateRemoveProduct = (_id) => {
+    const errors = [];
+    let isValid = true;
+    if (!_id) { errors.push("must have required property path '_id'"); isValid = false; }
+
+    return { isValid: isValid, errors: errors }
+
+}
+
+module.exports = { validateProduct, validateProductLaunch, validateEditProduct, validateRemoveProduct }

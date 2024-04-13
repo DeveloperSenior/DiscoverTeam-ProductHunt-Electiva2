@@ -1,6 +1,8 @@
 
 const mockingoose = require('mockingoose');
 const moment = require('moment');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const { DATE_FORMAT } = require('../../src/utilities/Constants');
 const { ProductModel } = require('../../src/models/ProductModel');
 const { Product, InfoProduct, ImageMediaProduct, ExtrasProduct, PromoCodeProduct, LinkProduct, CategoryProduct } = require('../../src/models/dto/Product');
@@ -8,100 +10,46 @@ const { Product, InfoProduct, ImageMediaProduct, ExtrasProduct, PromoCodeProduct
  * Mock user mongo document 
  */
 const productMock = {
-    "_id":  '66135f885eddc00e26f31977',
-    "owner": 'test@test.com',
-    "info": {
-        "name": "TestProduct",
-        "tags": ["dev", "software"],
-        "links": [
-            {
-                "link": "https://github/testProducto",
-                "socialMediaLink": [
-                    {
-                        "key": "twitter",
-                        "value": "@developersenior",
-                        "_id": {
-                            "$oid": "660c8fbccf95ed0216a2d100"
-                        }
-                    }
-                ],
-                "_id": {
-                    "$oid": "660c8fbccf95ed0216a2d0ff"
-                }
-            }
-        ],
-        "description": "Dev product to test",
-        "categories": [
-            {
-                "category": "Software",
-                "subCategory": "NodeJS",
-                "_id": {
-                    "$oid": "660c8fbccf95ed0216a2d101"
-                }
-            }
-        ],
-        "isOpenSource": true
+    "_id": {
+      "$oid": "6619699f8d0ab598b88859f9"
     },
-    "imagesMedia": {
-        "linksImages": [
-            "https://images/1",
-            "https://images/2"
-        ],
-        "linkDemo": null,
-        "linkVideo": null
+    "name": "TestProduct",
+    "description": "TestProduct",
+    "url": "https://github/testProducto",
+    "tags": ['dev', 'software'],
+    "state": "L",
+    "createdAt": {
+      "$date": "2024-04-12T00:00:00.000Z"
     },
-    "makers": ["@developersenior"],
-    "shoutouts": null,
-    "extras": {
-        "pricing": "Free",
-        "promoCode": [
-            {
-                "description": "DEVPROMO",
-                "code": "DEVPROMO",
-                "expirationDate": {
-                    "$date": "2024-07-01T00:00:00.000Z"
-                },
-                "_id": {
-                    "$oid": "660c8fbccf95ed0216a2d102"
-                }
-            }
-        ],
-        "fundingInfo": [
-            "I plan to seek VC funding in the near future.",
-            "I have raised venture-backed funding for this product."
-        ],
-        "firstComment": [
-            "MY FIRST COMMENT PRODUCT LAUNCH."
-        ]
+    "updatedAt": {
+      "$date": "2024-04-12T00:00:00.000Z"
     },
-    "__v": 0
-};
+    "user": {
+      "$oid": "6619690d8c2c9dfd95b6353f"
+    },
+    "__v": 0,
+    "launchAt": {
+      "$date": "2024-04-12T00:00:00.000Z"
+    },
+    "rating": 4
+  };
 
 describe("Product Model ", () => {
 
     it('should save Product', async () => {
 
         /**
-         * Mock request paylod body User to create
+         * Mock request paylod body Product to create
          */
-        const infoProductMock = new InfoProduct('TestProduct', ['dev', 'software'],
-            [new LinkProduct('https://github/testProducto', [{ key: 'twitter', value: '@developersenior' }])],
-            'Dev productos to test', [new CategoryProduct('Software','NodeJS')], true);
-        const imagesMediaMock = new ImageMediaProduct(['https://images/1', 'https://images/2'], null, null);
-        const makersMock = ['@developersenior'];
-        const shoutoutsMock = null;
-        const extrasMock = new ExtrasProduct('Free', [new PromoCodeProduct('DEVPROMO', 'DEVPROMO', '2024-07-01')],
-            ['I plan to seek VC funding in the near future.', 'I have raised venture-backed funding for this product.'],
-            'MY FIRST COMMENT PRODUCT LAUNCH.');
         const currentDate = moment().format(DATE_FORMAT.DEFAULT);
         const createProductMock = new Product.Builder()
-            .withOwner('test@test.com')
-            .withUserCreate('test@test.com')
-            .withCreationDate(currentDate)
-            .withInfo(infoProductMock).withImagesMedia(imagesMediaMock)
-            .withMakers(makersMock)
-            .withShoutouts(shoutoutsMock)
-            .withExtras(extrasMock).build();
+            .withName('TestProduct')
+            .withDescription('Dev productos to test')
+            .withUrl('https://github/testProducto')
+            .withTags(['dev', 'software'])
+            .withUser('6619690d8c2c9dfd95b6353f')
+            .withState('L')
+            .withCreatedAt(currentDate).build();
 
         /**
         * Mock response created product with save function ODM mongoose
@@ -110,10 +58,10 @@ describe("Product Model ", () => {
         expect.assertions(4);
         const productCreate = await new ProductModel(createProductMock).save();
         const response = productCreate.toObject();
-        expect(response).toHaveProperty('_id');
-        expect(response.owner).toEqual(createProductMock.owner);
-        expect(response.info.name).toEqual(createProductMock.info.name);
-        expect(response.info.tags).toEqual(createProductMock.info.tags);
+        expect(productCreate).toHaveProperty('_id');
+        expect(response.name).toEqual(createProductMock.name);
+        expect(response.state).toEqual(createProductMock.state);
+        expect(response.tags).toEqual(createProductMock.tags);
 
     });
 
