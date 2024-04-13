@@ -4,7 +4,7 @@
 const express = require('express');
 const cors = require('cors');
 const routerVersion = express.Router();
-const routersApp = require('./src/routes/config/SuscriptionRoutesAppConf');
+const routersApp = require('./src/ports/http/routes/config/SuscriptionRoutesAppConf');
 
 var app = express();
 

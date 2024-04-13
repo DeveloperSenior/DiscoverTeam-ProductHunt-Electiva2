@@ -1,5 +1,5 @@
 const { validateProduct } = require('../../src/validators/ProductValidator');
-const {  Product } = require('../../src/models/dto/Product');
+const {  Product } = require('../../src/infrastructure/dto/Product');
 const { DATE_FORMAT } = require('../../src/utilities/Constants');
 
 

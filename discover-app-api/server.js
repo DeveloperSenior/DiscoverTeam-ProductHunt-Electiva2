@@ -1,5 +1,5 @@
 const app = require("./app");
-const { connectDB } = require('./src/db/config/config');
+const { connectDB } = require('./src/infrastructure/db/config/config');
 
 /**
  * Lee las varibales de entorno del archivo .env solo ambiente local
