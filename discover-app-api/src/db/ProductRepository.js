@@ -115,7 +115,6 @@ const ProductRepository = DbModel => {
                 optionsfilter.launchAt = { $ne: null };
                 optionsfilter.state = STATES.LAUNCHED;
             }
-            console.log(optionsfilter);
             const data = await DbModel.paginate(
                 optionsfilter, // filters
                 {
