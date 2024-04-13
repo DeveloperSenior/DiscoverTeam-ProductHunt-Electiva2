@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "rate": {
+      "type": "integer",
+      "nullable": false
+    }
+  },
+  "required": [
+    "rate"
+  ]
+}
