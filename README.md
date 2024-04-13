@@ -84,6 +84,8 @@ npm run test
 *NOTA:* Para ver el informe de cobertura abrir el archivo `./coverage/index.html`
 
 4. **Ejecutar la aplicacion local:**
+
+**NOTA:** Antes de ejecutar el servidor, revisar el archivo `.env-example` y conviertalo en `.env` para que el servidor tome los parametros iniciales de configuración. 
 ```bash
 npm run runDev
 ```
