@@ -2,7 +2,9 @@ const { RateProduct } = require('../models/dto/RateProduct');
 const moment = require('moment');
 const { DATE_FORMAT } = require('../utilities/Constants');
 const { ERROR_MESSAGE, ERROR_CODE, ERROR_TYPE } = require('../utilities/Constants');
-const DefaultException = require('../models/exception/DefaultException')
+const DefaultException = require('../models/exception/DefaultException');
+const { defer } = require('rxjs');
+
 
 
 /**
@@ -39,13 +41,17 @@ const RateProductService = (rateProductRepository, productRepository) => {
             .withComment(comment)
             .withCreatedAt(currentDate)
             .withUpdatedAt(currentDate).build();
-        
-        const data = await rateProductRepository.rateProduct(productBuilder);
-        
-        const average = await averageRateProduct(findProduct._id);
 
-        const editRateIdProdcut = await productRepository.editProduct(findProduct._id,findProduct.user._id,{rating: average.rating[0].average} );
-        return {product: editRateIdProdcut, data: data};
+        const data = await rateProductRepository.rateProduct(productBuilder);
+
+        /** Calculate AVG async subscribe */
+        defer(async () => {
+
+            const average = await averageRateProduct(findProduct._id);
+            return await productRepository.editProduct(findProduct._id, findProduct.user._id, { rating: average.rating[0].average });
+
+        }).subscribe();
+        return { product: findProduct, data: data };
 
     }
 
@@ -64,10 +70,10 @@ const RateProductService = (rateProductRepository, productRepository) => {
 
         const productBuilder = new RateProduct.Builder()
             .withProduct(findedProduct._id).build();
-        
+
         const average = await rateProductRepository.averageRateProduct(productBuilder);
 
-        return {product: findedProduct, rating: average} ;
+        return { product: findedProduct, rating: average };
     }
 
     /**
@@ -82,9 +88,9 @@ const RateProductService = (rateProductRepository, productRepository) => {
             throw excepcion;
         }
 
-        const data =  await rateProductRepository.findRatesByProduct(findProduct._id);
+        const data = await rateProductRepository.findRatesByProduct(findProduct._id);
 
-        return {product: findProduct, commentsRating: data};
+        return { product: findProduct, commentsRating: data };
     }
 
     /**
@@ -99,7 +105,7 @@ const RateProductService = (rateProductRepository, productRepository) => {
             throw excepcion;
         }
 
-        return await rateProductRepository.findRatesByProduct(findProduct._id);     
+        return await rateProductRepository.findRatesByProduct(findProduct._id);
     }
 
     return { rateProduct, averageRateProduct, detailedProductDelivery, commentsProductDelivery }

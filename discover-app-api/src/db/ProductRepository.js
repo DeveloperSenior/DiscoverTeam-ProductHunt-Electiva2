@@ -143,7 +143,7 @@ const ProductRepository = DbModel => {
             $set: product
         }
         try {
-            const update= await DbModel.findOneAndUpdate(options, set);
+            await DbModel.findOneAndUpdate(options, set);
             return await DbModel.findOne(options).select("-__v")// Retrieve without __v
                 .populate('user', '-password -__v'); // Retrieve without password and __v
         } catch (e) {
