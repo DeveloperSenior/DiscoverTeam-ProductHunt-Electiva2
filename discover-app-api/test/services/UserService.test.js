@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 
-const tokenJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRldkBnbWFpbC5jb20iLCJpYXQiOjE3MTIwMjY3MTQsImV4cCI6MTcxMjAzMDMxNH0.u8CJrrrVI5MnW7IKOrTWi9Yk7gqYul2tIlTFd9_5iSA';
 /**
  * Mock user mongo document 
  */

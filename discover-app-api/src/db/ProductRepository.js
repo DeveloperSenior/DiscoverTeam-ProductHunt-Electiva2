@@ -168,22 +168,11 @@ const ProductRepository = DbModel => {
         }
     }
 
-    /**
-     * filter Products
-     * @param {*} filters 
-     */
-    const filterProducts = async (filters) => {
-
-
-
-    }
-
 
     return {
         createProduct,
         editProduct,
         removeProduct,
-        filterProducts,
         launchProduct,
         findProductsByOwner,
         findLaunchedProductsPager,

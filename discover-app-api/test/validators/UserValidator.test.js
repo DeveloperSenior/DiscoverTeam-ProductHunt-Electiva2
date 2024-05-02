@@ -1,4 +1,4 @@
-const { validateUser } = require('../../src/validators/UserValidator');
+const { validateUser, validateErrors } = require('../../src/validators/UserValidator');
 const { User } = require('../../src/models/dto/User');
 const bcrypt = require('bcrypt');
 
@@ -67,6 +67,13 @@ describe("User Validator Schema", () => {
          */
         expect(validate.errors).toHaveLength(1);
         expect(validate.errors).toEqual(expect.arrayContaining(["must have required property 'password'"]));
+    });
+
+    it("should validate false user Schema, invalid instance path schema return Error List", async () => {
+
+        const validate = validateErrors([{instancePath:'error/name', message: 'error path message'}]);
+        expect(validate).toHaveLength(1);
+        expect(validate[0]).toBe("error/name error path message");
     });
 
 

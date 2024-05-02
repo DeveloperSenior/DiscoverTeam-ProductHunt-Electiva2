@@ -4,10 +4,11 @@ const productRepository = require('../db/ProductRepository');
 const productService = require('../services/ProductService');
 const { ProductModel } = require('../models/ProductModel');
 const { validateProduct,
-        validateProductLaunch,
-        validateEditProduct,
-        validateRemoveProduct
-      } = require('../validators/ProductValidator');
+    validateProductLaunch,
+    validateEditProduct,
+    validateRemoveProduct,
+    validatePagerParameter
+} = require('../validators/ProductValidator');
 const { getSession } = require('../utilities/Utilities');
 
 /**
@@ -109,11 +110,19 @@ const findProductsByOwner = async (request, response) => {
 const findLaunchedProductsPager = async (request, response) => {
 
     try {
-        const {params, body} = request;
-        const { pageSize, pageNumber } = params;
+        const { params, body } = request;
 
-        if (!pageSize) pageSize = 5;
-        if (!pageNumber) pageNumber = 1;
+        // Validate pager parameters
+        const validate = validatePagerParameter(params);
+
+        if (!validate.isValid) {
+
+            // if validation failure, send error response
+            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+
+        }
+
+        const { pageSize, pageNumber } = params;
 
         const productServicesInject = pipe(productRepository, productService)(ProductModel);
 
@@ -143,7 +152,7 @@ const editProduct = async (request, response) => {
         const userSession = getSession(request);
 
         // Validate product Model to edit
-        const validate = validateEditProduct(_id,body);
+        const validate = validateEditProduct(_id, body);
 
         if (!validate.isValid) {
 
@@ -199,10 +208,11 @@ const removeProduct = async (request, response) => {
     }
 }
 
-module.exports = { createProduct,
-                   launchProduct,
-                   findProductsByOwner,
-                   findLaunchedProductsPager,
-                   editProduct,
-                   removeProduct
-                 }
+module.exports = {
+    createProduct,
+    launchProduct,
+    findProductsByOwner,
+    findLaunchedProductsPager,
+    editProduct,
+    removeProduct
+}
