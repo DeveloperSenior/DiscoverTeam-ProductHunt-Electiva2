@@ -87,11 +87,14 @@ const launchProduct = async (request, response) => {
  */
 const findProductsByOwner = async (request, response) => {
     try {
+        const { params } = request;
+        const { _idUser } = params;
         const productServicesInject = pipe(productRepository, productService)(ProductModel);
         const userSession = getSession(request);
-
+        if(_idUser){
+         userSession.userId = _idUser;
+        }
         const myProducts = await productServicesInject.findProductsByOwner(userSession);
-
         return response.status(HTTP_CODE.OK).json(myProducts);
 
     } catch (error) {
@@ -129,6 +132,81 @@ const findLaunchedProductsPager = async (request, response) => {
         const allLaunchedProducts = await productServicesInject.findLaunchedProductsPager(pageSize, pageNumber, body);
 
         return response.status(HTTP_CODE.OK).json(allLaunchedProducts);
+
+    } catch (error) {
+
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+
+}
+
+/**
+ * find all Products Pager
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const findProductsPager = async (request, response) => {
+
+    try {
+        const { params, body } = request;
+
+        // Validate pager parameters
+        const validate = validatePagerParameter(params);
+
+        if (!validate.isValid) {
+
+            // if validation failure, send error response
+            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+
+        }
+
+        const { pageSize, pageNumber } = params;
+
+        const productServicesInject = pipe(productRepository, productService)(ProductModel);
+        body.isFull = true; // enable full query
+        const allProducts = await productServicesInject.findLaunchedProductsPager(pageSize, pageNumber, body);
+
+        return response.status(HTTP_CODE.OK).json(allProducts);
+
+    } catch (error) {
+
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+
+}
+
+/**
+ * find only Followings Products User
+ * 
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const findProductsFollowingsPager = async (request, response) => {
+
+    try {
+        const { params, body } = request;
+        const userSession = getSession(request);
+        
+        // Validate pager parameters
+        const validate = validatePagerParameter(params);
+
+        if (!validate.isValid) {
+
+            // if validation failure, send error response
+            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+
+        }
+
+        const { pageSize, pageNumber } = params;
+
+        const productServicesInject = pipe(productRepository, productService)(ProductModel);
+        const onlyFollowersProducts = await productServicesInject.findProductsFollowingsPager(pageSize, pageNumber,userSession, body);
+
+        return response.status(HTTP_CODE.OK).json(onlyFollowersProducts);
 
     } catch (error) {
 
@@ -214,5 +292,7 @@ module.exports = {
     findProductsByOwner,
     findLaunchedProductsPager,
     editProduct,
-    removeProduct
+    removeProduct, 
+    findProductsPager,
+    findProductsFollowingsPager
 }

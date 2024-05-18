@@ -1,15 +1,42 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>DiscoverAppFront</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<body class="mat-typography">
+
+<body class="mat-typography container d-flex flex-column min-vh-100 container-background">
   <app-root></app-root>
+  <app-redirect></app-redirect>
+  <script type="text/javascript">
+    var msie = /msie\s|trident/i.test(window.navigator.userAgent);
+    String.prototype.format = function () {
+      // store arguments in an array
+      var args = arguments;
+      // use replace to iterate over the string
+      // select the match and check if the related argument is present
+      // if yes, replace the match with the argument
+      return this.replace(/{([0-9]+)}/g, function (match, index) {
+        // check if the argument is present
+        return typeof args[index] == 'undefined' ? match : args[index];
+      });
+    };
+    if (msie) {
+
+      //IE, redirect page
+      function redirectFunc() {
+        var ref = 'unsupported.html?val={0}'.format(btoa(String(window.location.href)));
+        window.open(ref, '_self')
+      }
+      redirectFunc();
+    }
+  </script>
 </body>
+
 </html>

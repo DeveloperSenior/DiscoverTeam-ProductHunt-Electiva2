@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Navegador no soportado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./assets/img/logo.svg" />
+    <style>
+        * {
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        html {
+            color: #888;
+            display: table;
+            font-family: sans-serif;
+            height: 100%;
+            text-align: center;
+            width: 100%;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+            margin: 2em auto;
+        }
+
+        h1 {
+            color: #555;
+            font-size: 2em;
+            font-weight: 400;
+        }
+
+        p {
+            margin: 0 auto;
+            width: 280px;
+        }
+
+        input {
+            margin: 0 auto;
+            width: 280px;
+        }
+
+        .button {
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 280px) {
+            body,
+            p {
+                width: 95%;
+            }
+            h1 {
+                font-size: 1.5em;
+                margin: 0 0 0.3em;
+            }
+            input {
+                width: 95%;
+            }
+        }
+
+        .discover {
+            display: inline-block;
+            width: 703px;
+            height: 460px;
+            background: url('./assets/img/disconnected.svg') no-repeat center top;
+            background-size: contain;
+        }
+        /* wait autoprefixer update to allow simple generation of high pixel density media query */
+
+        @media only screen and (-webkit-min-device-pixel-ratio: 2),
+        only screen and (-moz-min-device-pixel-ratio: 2),
+        only screen and (-o-min-device-pixel-ratio: 2/1),
+        only screen and (min-resolution: 192dpi),
+        only screen and (min-resolution: 2dppx) {
+            .discover {
+                background: url('./assets/img/disconnected.svg') no-repeat center top;
+                background-size: contain;
+            }
+        }
+
+        .error-page-color-blue {
+            color: #0033a0;
+        }
+
+        .discover-element__separator {
+            width: 441px;
+            margin-bottom: 47px;
+            border: 3px solid #e3e829;
+            border-radius: 40px;
+        }
+
+        .elementor-kit-8 h2 {
+            font-family: fs joey, Sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 53px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div>
+                <h2 class="error-page-color-blue col-md-8">¡Oops! <br>Navegador no soportado</h2>
+                <hr class="discover-element__separator">
+
+                <div *ngIf="errorMessage">
+                    <div class="alert alert-danger">Lo sentimos, el navegador no es soportado para este sitio.</div><br>
+                </div>
+                <p>Selecciona, copia y pega <b>Toda</b> esta ruta en otro navegador: </p><br>
+                <div class="tooltip">
+                    <form>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <span class="discover img-fluid rounded"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        window.location.hash = "no-back-button";
+
+        // Again because Google Chrome doesn't insert
+        // the first hash into the history
+        window.location.hash = "Again-No-back-button";
+
+        window.onhashchange = function() {
+            window.location.hash = "no-back-button";
+        }
+
+        function getURL() {
+            var params = {};
+            var url = decodeURIComponent(window.location.href).replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                function(_, key, value) {
+                    return params[key] = value;
+                });
+            var val = params.val.replace('#no-back-button', '').replace('#Again-No-back-button', '');
+            return atob(val);
+        }
+        var url = getURL();
+        var input = document.createElement("textarea");
+        input.setAttribute("name", "link");
+        input.setAttribute("rows", "10");
+        input.setAttribute("cols", "80");
+        input.setAttribute("readonly");
+        input.textContent = url;
+        input.setAttribute("onClick", "this.select()");
+        var form1 = document.forms[0];
+        form1.appendChild(input);
+    </script>
+</body>
+
+</html>
+<!-- IE needs 512+ bytes: http://blogs.msdn.com/b/ieinternals/archive/2010/08/19/http-error-pages-in-internet-explorer.aspx -->

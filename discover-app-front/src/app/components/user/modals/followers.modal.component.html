@@ -1,0 +1,65 @@
+<div class="modal-header text-center py-0">
+  <h2 class="modal-title w-100 font-weight-bold">
+    {{title}}
+  </h2>
+</div>
+<ng-container>
+  <mat-paginator class="table align-middle mb-0" #paginator [pageSizeOptions]="[3, 6]" showFirstLastButtons
+    [hidden]=" scopeList && scopeList.length === 0">
+  </mat-paginator>
+  <mat-table class="table align-middle mb-0" mat-table [dataSource]="dataSource" #tableSort="matSort" matSort #tableView
+    [hidden]="scopeList && scopeList.length === 0">
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="d-flex align-items-center row">
+          <div class="col">
+            <div class="ms-3 text-center align-items-center">
+              <img [src]="validateAvatar(element)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                class="rounded-circle" />
+              <p class="fw-bold mb-1" *ngIf="element">{{element.userName}}</p>
+
+            </div>
+          </div>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="contact">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="ms-3 text-center">
+          <p class="fw-bold mb-1" *ngIf="element">{{element.email}}</p>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="bio">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="ms-3 text-center">
+          <p class="fw-bold mb-1" *ngIf="element">{{element.bio}}</p>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="ms-3 text-center">
+          <p class="fw-bold mb-1" *ngIf="element">{{element.createdAt | dateformatter}}</p>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns;"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-card class="user-message-container" *ngIf="scopeList && scopeList.length === 0">
+    {{'generic.messages.no_data' | translate}}
+  </mat-card>
+</ng-container>

@@ -38,7 +38,9 @@ const userMock =
         avatar: "http://avatar/andres.png",
         email: "testUser@gmail.com",
         password: "JDJiJDEwJDVFTWVnQ0NvR0NKRGd0d2QvamVUc2UwUVkvak13VVEwRE9Wa1U4MXdzQ203Z0ZYZmhkMW11",
-        createdAt: "2024-04-09T00:00:00.000Z"
+        createdAt: "2024-04-09T00:00:00.000Z",
+        followers: [],
+        followings:[]
     }
 ;
 

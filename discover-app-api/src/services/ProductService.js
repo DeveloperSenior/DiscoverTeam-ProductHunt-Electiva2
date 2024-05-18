@@ -129,13 +129,27 @@ const ProductService = productRepository => {
 
     }
 
+    /**
+     * find only Followings Products User
+     * @param {*} pageSize 
+     * @param {*} pageNumber 
+     * @param {*} userSession 
+     * @param {*} body 
+     * @returns 
+     */
+    const findProductsFollowingsPager = async (pageSize, pageNumber, userSession, body) => {
+        const { userId } = userSession;
+        return await productRepository.findProductsFollowingsPager(pageSize, Math.max(0, pageNumber),userId, body);
+    }
+
     return {
         createProduct,
         editProduct,
         launchProduct,
         findProductsByOwner,
         findLaunchedProductsPager,
-        removeProduct
+        removeProduct,
+        findProductsFollowingsPager
     }
 }
 

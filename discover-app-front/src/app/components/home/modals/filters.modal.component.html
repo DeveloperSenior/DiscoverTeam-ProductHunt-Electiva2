@@ -1,0 +1,76 @@
+<div class="container-fluid ">
+  <div class="card discover-card m-3">
+    <mdb-tabs #tabs [pills]="true" [fill]="true">
+      <mdb-tab title="Criterios de busqueda">
+        <form [formGroup]="form" class="m-3">
+
+          <!-- Name input -->
+          <mdb-form-control class="mb-4">
+            <input mdbInput formControlName="name" type="text" id="name" class="form-control" />
+            <label mdbLabel class="form-label" for="name">Nombre</label>
+          </mdb-form-control>
+
+          <!-- tags input -->
+          <mdb-form-control class="mb-4">
+            <mat-chip-grid #chipGrid aria-label="Ingrese tags">
+              @for (tag of tags; track tag) {
+                <mat-chip-row
+                  (removed)="remove(tag)"
+                  [editable]="true"
+                  (edited)="edit(tag, $event)"
+                  [aria-description]="'press enter to edit ' + tag">
+                  {{tag}}
+                  <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input mdbInput formControlName="tags" type="text" id="tags" class="form-control"
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)"
+            />
+            <label mdbLabel class="form-label" for="tags">Tags</label>
+          </mdb-form-control>
+
+          <!-- rate input -->
+          <mdb-form-control class="mb-4">
+            <input mdbInput formControlName="rate" min="1" max="5" type="number" id="rate" class="form-control"/>
+            <label mdbLabel class="form-label" for="rate">Calificación</label>
+          </mdb-form-control>
+          <!-- createdAt input -->
+          <mdb-form-control class="mb-4">
+            <div class="input-group mb-3">
+              <input type="text" mdbInput formControlName="createdAt" id="createdAt"
+              [matDatepicker]="picker" class="form-control rounded border-1">
+              <span class="input-group-text border-0" >
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </span>
+              <label mdbLabel class="form-label" for="createdAt">Fecha creación</label>
+            </div>
+          </mdb-form-control>
+          <!-- launchAt input -->
+          <mdb-form-control class="mb-4">
+            <div class="input-group mb-3">
+              <input type="text" mdbInput formControlName="launchAt" id="launchAt"
+              [matDatepicker]="pickerLaunch" class="form-control rounded border-1">
+              <span class="input-group-text border-0" >
+                <mat-datepicker-toggle matIconSuffix [for]="pickerLaunch"></mat-datepicker-toggle>
+                <mat-datepicker #pickerLaunch></mat-datepicker>
+              </span>
+              <label mdbLabel class="form-label" for="launchAt">Fecha lanzamiento</label>
+            </div>
+          </mdb-form-control>
+
+          <!-- Submit button -->
+          <button mdbRipple type="submit" [disabled]="!validateForm" (click)="filter()" class="btn btn-primary btn-block mb-4">
+           Filtrar
+          </button>
+        </form>
+      </mdb-tab>
+    </mdb-tabs>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+{
+  "User": {
+    "context": "/api/v1",
+    "port": 3000,
+    "services": {
+      "user": "/user",
+      "login": "/login",
+      "signup": "/signin",
+      "follow": "/follow",
+      "unfollow": "/unfollow"
+    }
+  }
+}

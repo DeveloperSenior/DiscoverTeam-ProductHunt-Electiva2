@@ -1,0 +1,247 @@
+<!-- Container wrapper -->
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- top launched products-->
+    <div class="col-6">
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="pointer" (click)="onFind()">
+          <small>{{'generic.actions.refresh' | translate}}</small>
+          <button mat-icon-button [matTooltip]="this.translateService.instant('generic.actions.refresh')">
+            <mat-icon class="discover-ico" [title]="this.translateService.instant('generic.actions.refresh')">
+              refresh
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="modal-header text-center py-0">
+        <h2 class="modal-title w-100 font-weight-bold">
+          {{'pages.home.tables.top.today' | translate}}
+        </h2>
+      </div>
+      <mat-paginator class="" #paginator [pageSizeOptions]="[6, 12]" showFirstLastButtons
+        [hidden]=" scopeList && scopeList.length === 0" (page)="pageChanged($event)">
+      </mat-paginator>
+      <mat-table class="table align-middle mb-0 mat-elevation-z8" mat-table [dataSource]="dataSource"
+        #tableSort="matSort" matSort #tableView [hidden]="scopeList && scopeList.length === 0">
+        <ng-container matColumnDef="name">
+
+          <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+            <div class="d-flex align-items-center row">
+              <div class="col">
+
+                <div class="ms-3 text-center align-items-center">
+                  <img [src]="getImage(element.name)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                    class="rounded-circle" />
+                  <p class="fw-bold mb-1" *ngIf="element">{{element.name}}</p>
+                  <p *ngIf="element.state == 'L' " class="badge badge-success rounded-pill d-inline m-1"
+                    [matTooltip]="'Lanzado'">Lanzado</p>
+                  <p *ngIf="element.state == 'P' " class="badge badge-info rounded-pill d-inline m-1"
+                    [matTooltip]="'Creado pendiente por lanzar'">Creado</p>
+                  <p *ngIf="element.state == 'I' " class="badge badge-danger rounded-pill d-inline m-1"
+                    [matTooltip]="'Inactivo'">Inactivo</p>
+                </div>
+                <div class="d-inline text-center">
+                  <app-star-rating class="d-inline m-1" [clickDisabled]="true" [showMessage]="true"
+                    [rating]="element.rating" [starCount]="starCount" [color]="starColor"></app-star-rating>
+                </div>
+
+              </div>
+              <div class="col">
+                <p class="fw-bold mb-1" *ngIf="element">{{element.description}}</p>
+                <p class="text-muted mb-0 ">
+                  <span *ngIf="element">
+
+                    <hr class="hr hr-blurry" />
+                    <p *ngFor="let item of element.tags;"
+                      class="text-center badge badge-primary rounded-pill d-inline m-1" [matTooltip]="item">#{{item}}
+                    </p>
+                  </span>
+                </p>
+                <hr class="hr hr-blurry" />
+                <a [href]="element.url" target="_blank"
+                  class="text-center badge badge-warning rounded-pill d-inline m-1"
+                  [matTooltip]="element.url">{{'pages.home.tables.goToSite' | translate}}</a>
+                <a [href]="'user/'+element.user.email"
+                  class="text-center badge badge-info rounded-pill d-inline m-1"
+                  [matTooltip]="element.user.email">Ver autor</a>
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row (click)="showProduct(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <mat-card class="user-message-container" *ngIf="scopeList && scopeList.length === 0">
+        {{'generic.messages.no_data' | translate}}
+      </mat-card>
+    </div>
+
+    <!-- top best products-->
+    <div class="col-6">
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="pointer" (click)="onFindBest()">
+          <small>{{'generic.actions.refresh' | translate}}</small>
+          <button mat-icon-button [matTooltip]="this.translateService.instant('generic.actions.refresh')">
+            <mat-icon class="discover-ico" [title]="this.translateService.instant('generic.actions.refresh')">
+              refresh
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="modal-header text-center py-0">
+        <h2 class="modal-title w-100 font-weight-bold">
+          {{'pages.home.tables.top.bestRating' | translate}}
+        </h2>
+      </div>
+      <mat-paginator class="" #paginatorBest [pageSizeOptions]="[6, 12]" showFirstLastButtons
+        [hidden]=" scopeListBest && scopeListBest.length === 0" (page)="pageChangedBest($event)">
+      </mat-paginator>
+      <mat-table class="table align-middle mb-0 mat-elevation-z8" mat-table [dataSource]="dataSourceBest"
+        #tableSortBest="matSort" matSort #tableViewBest [hidden]="scopeListBest && scopeListBest.length === 0">
+        <ng-container matColumnDef="name">
+
+          <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+            <div class="d-flex align-items-center row">
+              <div class="col">
+
+                <div class="ms-3 text-center align-items-center">
+                  <img [src]="getImage(element.name)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                    class="rounded-circle" />
+                  <p class="fw-bold mb-1" *ngIf="element">{{element.name}}</p>
+                  <p *ngIf="element.state == 'L' " class="badge badge-success rounded-pill d-inline m-1"
+                    [matTooltip]="'Lanzado'">Lanzado</p>
+                  <p *ngIf="element.state == 'P' " class="badge badge-info rounded-pill d-inline m-1"
+                    [matTooltip]="'Creado pendiente por lanzar'">Creado</p>
+                  <p *ngIf="element.state == 'I' " class="badge badge-danger rounded-pill d-inline m-1"
+                    [matTooltip]="'Inactivo'">Inactivo</p>
+                </div>
+                <div class="d-inline text-center">
+                  <app-star-rating class="d-inline m-1" [clickDisabled]="true" [showMessage]="true"
+                    [rating]="element.rating" [starCount]="starCount" [color]="starColor"></app-star-rating>
+                </div>
+
+              </div>
+              <div class="col">
+                <p class="fw-bold mb-1" *ngIf="element">{{element.description}}</p>
+                <p class="text-muted mb-0 ">
+                  <span *ngIf="element">
+
+                    <hr class="hr hr-blurry" />
+                    <p *ngFor="let item of element.tags;"
+                      class="text-center badge badge-primary rounded-pill d-inline m-1" [matTooltip]="item">#{{item}}
+                    </p>
+                  </span>
+                </p>
+                <hr class="hr hr-blurry" />
+                <a [href]="element.url" target="_blank"
+                  class="text-center badge badge-warning rounded-pill d-inline m-1"
+                  [matTooltip]="element.url">{{'pages.home.tables.goToSite' | translate}}</a>
+                  <a [href]="'user/'+element.user.email"
+                  class="text-center badge badge-info rounded-pill d-inline m-1"
+                  [matTooltip]="element.user.email">Ver autor</a>
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row (click)="showProduct(row)" *matRowDef="let row; columns: displayedColumnsBest;"></mat-row>
+      </mat-table>
+      <mat-card class="user-message-container" *ngIf="scopeListBest && scopeListBest.length === 0">
+        {{'generic.messages.no_data' | translate}}
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <!-- top best products-->
+    <div class="col-12">
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="pointer" (click)="onFindFilter()">
+          <small>{{'generic.actions.refresh' | translate}}</small>
+          <button mat-icon-button [matTooltip]="this.translateService.instant('generic.actions.refresh')">
+            <mat-icon class="discover-ico" [title]="this.translateService.instant('generic.actions.refresh')">
+              refresh
+            </mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="modal-header text-center py-0">
+        <h2 class="modal-title w-100 font-weight-bold">
+          {{'pages.home.tables.searchProducts' | translate}}
+        </h2>
+      </div>
+      <mat-form-field>
+        <mat-label>{{dataFilter? 'Se tienen criterios existentes de filtro' :'generic.actions.filter' | translate}}</mat-label>
+        <input matInput (keyup)="applyFilter($event)"
+         [placeholder]=" dataFilter? 'Se tiene un filtro aplicado' :'Filtro solo en la tabla'"
+         #inputFilter>
+        <button matSuffix mat-icon-button
+             matTooltip="Abrir componente de criterios de busqueda"
+             aria-label="Abrir componente de criterios de busqueda"
+             (click)="openFilterModal(inputFilter.value)">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+        @if (inputFilter.value || dataFilter) {
+          <button matSuffix mat-icon-button aria-label="Clear" (click)="inputFilter.value=''; dataFilter = undefined;">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+      <mat-table class="table align-middle mb-0 mat-elevation-z8" mat-table [dataSource]="dataSourceFilter"
+        #tableSortFilter="matSort" matSort #tableViewFilter [hidden]="scopeListFilter && scopeListFilter.length === 0">
+        <ng-container matColumnDef="name">
+
+          <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+            <div class="d-flex align-items-center row">
+              <div class="col">
+
+                <div class="ms-3 text-center align-items-center">
+                  <img [src]="getImage(element.name)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                    class="rounded-circle" />
+                  <p class="fw-bold mb-1" *ngIf="element">{{element.name}}</p>
+                  <p *ngIf="element.state == 'L' " class="badge badge-success rounded-pill d-inline m-1"
+                    [matTooltip]="'Lanzado'">Lanzado</p>
+                  <p *ngIf="element.state == 'P' " class="badge badge-info rounded-pill d-inline m-1"
+                    [matTooltip]="'Creado pendiente por lanzar'">Creado</p>
+                  <p *ngIf="element.state == 'I' " class="badge badge-danger rounded-pill d-inline m-1"
+                    [matTooltip]="'Inactivo'">Inactivo</p>
+                </div>
+                <div class="d-inline text-center">
+                  <app-star-rating class="d-inline m-1" [clickDisabled]="true" [showMessage]="true"
+                    [rating]="element.rating" [starCount]="starCount" [color]="starColor"></app-star-rating>
+                </div>
+
+              </div>
+              <div class="col">
+                <p class="fw-bold mb-1" *ngIf="element">{{element.description}}</p>
+                <p class="text-muted mb-0 ">
+                  <span *ngIf="element">
+
+                    <hr class="hr hr-blurry" />
+                    <p *ngFor="let item of element.tags;"
+                      class="text-center badge badge-primary rounded-pill d-inline m-1" [matTooltip]="item">#{{item}}
+                    </p>
+                  </span>
+                </p>
+                <hr class="hr hr-blurry" />
+                <a [href]="element.url" target="_blank"
+                  class="text-center badge badge-warning rounded-pill d-inline m-1"
+                  [matTooltip]="element.url">{{'pages.home.tables.goToSite' | translate}}</a>
+                  <a [href]="'user/'+element.user.email"
+                  class="text-center badge badge-info rounded-pill d-inline m-1"
+                  [matTooltip]="element.user.email">Ver autor</a>
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-row (click)="showProduct(row)" *matRowDef="let row; columns: displayedColumnsFilter;"></mat-row>
+      </mat-table>
+
+        <mat-paginator class="" #paginatorFilter [pageSizeOptions]="[6, 12]" showFirstLastButtons
+          [hidden]="scopeListFilter && scopeListFilter.length === 0" (page)="pageChangedFilter($event)">
+        </mat-paginator>
+
+    </div>
+  </div>
+</div>

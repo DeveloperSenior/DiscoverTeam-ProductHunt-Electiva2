@@ -1,0 +1,58 @@
+{
+  "generic": {
+    "app_name": "Discover App",
+    "actions": {
+      "filter_poliza": "Búscar póliza",
+      "filter": "Filtrar",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "done": "Aceptar",
+      "create": "Crear",
+      "admin": "Administrar",
+      "download": "Descargar",
+      "detail": "Ver detalle",
+      "close": "Cerrar",
+      "refresh": "Actualizar lista",
+      "revert": "Anular",
+      "reprint": "Reimprimir",
+      "add": "Adicionar",
+      "search": "Búscar",
+      "view": "Ver",
+      "activated": "Activar",
+      "desactivated": "Desactivar",
+      "retry": "Reintentar",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "cancel": "Cancelar"
+    },
+    "messages": {
+      "process_success": "Transacción procesada",
+      "mandatory_fields": "Debe diligenciar todos los campos obligatorios",
+      "generic_error": "Error. Por favor contacta tu equipo de TI.",
+      "generic_error_back": "Transacción con alertamiento",
+      "delete_confirmation": "Confirma que desea eliminar el registro?",
+      "desactivated_confirmation": "Confirma que desea desactivar el registro?",
+      "no_data": "No se ha encontrado información.",
+      "refresh_page": "Al refrescar esta pagina, por seguridad la sesión del usuario será invalidada y tendr? que ingresar nuevamente a la plataforma, si esta ejecutando algun proceso o ingresando información en un formulario este se perderá de manera permanente.",
+      "loading": "Cargando...",
+      "not_allow_resource": "No tiene acceso al recurso solicitado ... Póngase en contacto con el administrador del sistema",
+      "confirmAction": "¿Está seguro de realizar esta acción?",
+      "confirmContinue": "¿Desea continuar con la operación?"
+    },
+    "header":{
+      "menu":{
+        "home":"Inicio"
+      }
+    },
+    "footer": {
+      "newsletter": "Sign up for our newsletter",
+      "forms": {
+        "email": "Email address"
+      },
+      "actions": {
+        "signup": "Subscribe"
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ const DefaultException = require('../models/exception/DefaultException')
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { STATES } = require('../utilities/Constants');
+const { UserModel } = require('../models/UserModel');
 
 /**
  * Product Repository
@@ -108,12 +109,19 @@ const ProductRepository = DbModel => {
         try {
             let optionsfilter = { launchAt: { $ne: null }, state: STATES.LAUNCHED }
             if (filter){
-                const { tags, name, rate } = filter;
+                const { tags, name, rate, isFull, createdAt } = filter;
+                optionsfilter.launchAt = { $ne: null };
+                optionsfilter.state = STATES.LAUNCHED;
+                if( isFull ){
+                    optionsfilter = {}
+                }
+                if ( createdAt ) {
+                    const filterDate = new Date(createdAt);
+                    optionsfilter.createdAt = filterDate;
+                }
                 if ( tags ) optionsfilter.tags = {$in: tags};
                 if ( name ) optionsfilter.name = {$regex: name, $options: 'i'};
                 if ( rate ) optionsfilter.rating = {$eq : rate};
-                optionsfilter.launchAt = { $ne: null };
-                optionsfilter.state = STATES.LAUNCHED;
             }
             const data = await DbModel.paginate(
                 optionsfilter, // filters
@@ -122,7 +130,49 @@ const ProductRepository = DbModel => {
                     limit: pageSize,
                     sort: { launchAt: 'asc' },
                     select: '-__v', // Retrieve without __v
-                    populate: { path: 'user', select: '-password -__v' }
+                    populate: { path: 'user', select: '-password -__v -followers -followings' }
+                });
+            const { docs,totalDocs, totalPages, prevPage, nextPage } = data;
+            return { actualPage: pageNumber, totalPage: totalDocs, prevPage: prevPage, nextPage: nextPage, data: docs };
+        } catch (e) {
+            const excepcion = new DefaultException(e.message);
+            throw excepcion;
+        }
+    }
+
+    /**
+     * find only Followings Products User
+     * @param {*} pageSize 
+     * @param {*} pageNumber 
+     * @param {*} userId 
+     * @param {*} body 
+     * @returns 
+     */
+    const findProductsFollowingsPager = async (pageSize, pageNumber, userId, filter) => {
+        try {
+
+            const followings = await UserModel.findOne({_id: userId})
+            .select('followings').exec();
+            let optionsfilter = { user: { $in: followings.followings } }
+            if (filter){
+                const { tags, name, rate, createdAt } = filter;
+
+                if ( createdAt ) {
+                    const filterDate = new Date(createdAt);
+                    optionsfilter.createdAt = filterDate;
+                }
+                if ( tags ) optionsfilter.tags = {$in: tags};
+                if ( name ) optionsfilter.name = {$regex: name, $options: 'i'};
+                if ( rate ) optionsfilter.rating = {$eq : rate};
+            }
+            const data = await DbModel.paginate(
+                optionsfilter, // filters
+                {
+                    page: pageNumber,
+                    limit: pageSize,
+                    sort: { createdAt: 'asc' },
+                    select: '-__v', // Retrieve without __v
+                    populate: { path: 'user', select: '-password -__v -followers -followings' }
                 });
             const { docs, totalPages, prevPage, nextPage } = data;
             return { actualPage: pageNumber, totalPage: totalPages, prevPage: prevPage, nextPage: nextPage, data: docs };
@@ -131,6 +181,7 @@ const ProductRepository = DbModel => {
             throw excepcion;
         }
     }
+
 
     /**
      * edit Product by id
@@ -177,7 +228,8 @@ const ProductRepository = DbModel => {
         findProductsByOwner,
         findLaunchedProductsPager,
         findProductsById,
-        findProductsByIdOwner
+        findProductsByIdOwner,
+        findProductsFollowingsPager
     }
 
 

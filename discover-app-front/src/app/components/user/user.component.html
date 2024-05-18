@@ -1,0 +1,94 @@
+<div class="row">
+  <div class="card col text-center">
+    <div class="card-header">
+      <img [src]="validateAvatar()" alt="" style="width: 100px; height: 100px; margin-right: 5px;"
+        class="rounded-circle" />
+      <P class="card-text">{{user.email}}</P>
+    </div>
+    <div class="card-body">
+      <h2 class="card-title">{{user.userName}}</h2>
+      <p class="card-text">{{user.bio}}</p>
+      <div class="row text-center">
+        <a (click) = "openFollowersModal(1)" class="followers fw-bold col align-items-lefth">{{user.followers.length}} Follower</a>
+        <a *ngIf="showFollowUnfollow()" (click) = "onUnfollowFollow(!isFollow)" [class]="isFollow?'btn followers badge badge-danger rounded-pill col':'btn followers badge badge-info rounded-pill col'">{{followUnfollow}}</a>
+        <a (click) = "openFollowersModal(2)" class="followers fw-bold col align-items-lefth">{{user.followings.length}} Followings</a>
+      </div>
+    </div>
+  </div>
+  <div class="card col">
+
+    <mat-paginator class="table align-middle mb-0" #paginator [pageSizeOptions]="[6, 12]" showFirstLastButtons
+      [hidden]=" scopeList && scopeList.length === 0">
+    </mat-paginator>
+    <mat-table class="table align-middle mb-0" mat-table [dataSource]="dataSource" #tableSort="matSort" matSort
+      #tableView [hidden]="scopeList && scopeList.length === 0">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+        </mat-header-cell>
+        <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+          <div class="d-flex align-items-center row">
+            <div class="col">
+              <div class="ms-3 text-center align-items-center">
+                <img [src]="getImage(element.name)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                  class="rounded-circle" />
+                <p class="fw-bold mb-1" *ngIf="element">{{element.name}}</p>
+                <p *ngIf="element.state == 'L' " class="badge badge-success rounded-pill d-inline m-1"
+                  [matTooltip]="'Lanzado'">Lanzado</p>
+                <p *ngIf="element.state == 'P' " class="badge badge-info rounded-pill d-inline m-1"
+                  [matTooltip]="'Creado pendiente por lanzar'">Creado</p>
+                  <a [href]="element.url" target="_blank" class="text-center badge badge-warning rounded-pill d-inline m-1"
+                  [matTooltip]="element.url">{{'pages.home.tables.goToSite' | translate}}</a>
+              </div>
+              <div class="d-inline text-center">
+                <button style="width: 20px; height: 20px;" mat-icon-button [color]="color" *ngFor="let ratingId of getStars(element.rating);index as i" [id]="'star_'+i"
+                  (click)="onClickStar(i+1)" [matTooltip]="''+(ratingId+1)" matTooltipPosition="above">
+                  <mat-icon class="m-1" >
+                    {{showIconStar(i)}}
+                  </mat-icon>
+                </button>
+                <mat-error *ngIf="starCount == null || starCount == 0">
+                  Star count is <strong>required</strong> and cannot be zero
+                </mat-error>
+                <p class="body-2" *ngIf="showMessage">{{rating}} / {{starCount}}
+              </p>
+                        <!-- Submit button -->
+          <button mdbRipple type="submit" *ngIf="element.state == 'P' && user._id == element.user._id" (click)="launch(element._id)"
+          class="btn btn-success btn-block mb-4">
+          Lanzar Producto
+        </button>
+              </div>
+            </div>
+            <div class="col">
+              <div class="ms-3 text-center">
+                <p class="fw-bold mb-1" *ngIf="element">{{element.description}}</p>
+
+                <p class="text-muted mb-0 ">
+
+                  <span *ngIf="element">
+
+                    <hr class="hr hr-blurry" />
+                    <p *ngFor="let item of element.tags;" class="badge badge-primary rounded-pill d-inline m-1"
+                      [matTooltip]="item">#{{item}}</p>
+                  </span>
+
+                </p>
+                <hr class="hr hr-blurry" />
+                <mat-icon [matTooltip]="'Total de reseñas entre todos los usuarios '+element.totalComments" class="m-1" (click)="showComments(element)" >
+                  comments
+                </mat-icon>
+                {{element.totalComments}}
+              </div>
+            </div>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-card class="user-message-container" *ngIf="scopeList && scopeList.length === 0">
+      {{'generic.messages.no_data' | translate}}
+    </mat-card>
+
+
+
+  </div>
+</div>
