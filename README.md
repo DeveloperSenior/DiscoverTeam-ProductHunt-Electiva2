@@ -104,4 +104,32 @@ In the Postman tool import the file `discover-app-api.postman_collection` which 
 
 # Front-End Project Structure
 
-`In construction`
+The project was developed for the front-end with Angular v17.3.1, using the following support libraries:
+
+1. `mdb-angular-ui-kit` s a library that greatly extends the capabilities of regular Bootstrap.
+2. `minidenticons` Generate identicons (pixelated avatars) on the client from usernames instead of fetching images from a server. Much faster, saves bandwidth and GDPR compliant.
+3. `rxjs` Library of reactive extensions for Angular TypeScript and JavaScript
+4. `@angular/material` The Angular team builds and maintains both common UI components and tools to help you build your own custom components
+6. `@sweetalert2` A beautiful, responsive, customizable, accessible (WAI-ARIA) replacement for JavaScript's popup boxes. Zero dependencies.
+
+# How to run the project
+1. **Clone the Repository:**
+```bash
+git clone
+https://github.com/DeveloperSenior/DiscoverTeam-ProductHunt-Electiva2.git
+```
+2. **Install node modules:**
+```bash
+cd discover-app-front
+npm install
+```
+
+3. **Run the local application:**
+
+
+```bash
+npm start
+
+```
+
+5. Open in browser http://localhost:4200/ show home page, It means that our app is up.

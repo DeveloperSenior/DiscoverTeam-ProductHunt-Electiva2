@@ -1,0 +1,59 @@
+<div class="modal-header text-center py-0">
+  <h2 class="modal-title w-100 font-weight-bold">
+    {{'pages.commentsDetail.title' | translate}}
+  </h2>
+</div>
+<ng-container>
+  <mat-paginator class="table align-middle mb-0" #paginator [pageSizeOptions]="[3, 6]" showFirstLastButtons
+    [hidden]=" scopeList && scopeList.length === 0">
+  </mat-paginator>
+  <mat-table class="table align-middle mb-0" mat-table [dataSource]="dataSource" #tableSort="matSort" matSort #tableView
+    [hidden]="scopeList && scopeList.length === 0">
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="d-flex align-items-center row">
+          <div class="col">
+            <div class="ms-3 text-center align-items-center">
+              <img [src]="validateAvatar(element)" alt="" style="width: 80px; height: 80px; margin-right: 5px;"
+                class="rounded-circle" />
+              <p class="fw-bold mb-1" *ngIf="element">{{element.user.userName}}</p>
+
+            </div>
+            <div class="d-inline text-center">
+              <button style="width: 10px !important;  height: 10px !important;" mat-icon-button [color]="color"
+                *ngFor="let ratingId of getStars(element.rate);index as i" [id]="'star_'+i" (click)="onClickStar(i+1)"
+                [matTooltip]="''+(ratingId+1)" matTooltipPosition="above">
+                <mat-icon class="m-1">
+                  {{showIconStar(i)}}
+                </mat-icon>
+              </button>
+              <mat-error *ngIf="starCount == null || starCount == 0">
+                Star count is <strong>required</strong> and cannot be zero
+              </mat-error>
+              <p class="body-2" *ngIf="showMessage">{{rating}} / {{starCount}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="comments">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell class="ms-3" *matCellDef="let element" data-label="" data-label-key="">
+        <div class="ms-3 text-center">
+          <p class="fw-bold mb-1" *ngIf="element">{{element.comment}}</p>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns;"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-card class="user-message-container" *ngIf="scopeList && scopeList.length === 0">
+    {{'generic.messages.no_data' | translate}}
+  </mat-card>
+</ng-container>

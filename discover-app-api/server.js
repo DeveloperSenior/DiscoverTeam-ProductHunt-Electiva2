@@ -13,5 +13,4 @@ const apiPath = process.env.API_PATH || '/api/v1';
 app.listen(port, () => {
     console.log(`Server running port ${port} API ${apiPath}`);
     connectDB().then(response => console.log(`Data base connect: host: ${response.host} Name: ${response.name}`)).catch(err => console.error('Error abriendo conexion a la base de datos', err));
-
 });

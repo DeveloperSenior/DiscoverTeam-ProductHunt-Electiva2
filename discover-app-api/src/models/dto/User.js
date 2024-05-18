@@ -4,7 +4,7 @@
  * User Model builder object
  */
 class User {
-    constructor(_id, username, bio, avatar, email, password, createdAt, updatedAt) {
+    constructor(_id, username, bio, avatar, email, password, createdAt, updatedAt,followers, followings) {
         this._id = _id;
         this.username = username;
         this.bio = bio;
@@ -13,6 +13,9 @@ class User {
         this.password = password ;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.followers = followers;
+        this.followings = followings;
+
     }
     static Builder = class {
         constructor() {
@@ -71,6 +74,18 @@ class User {
         withUpdatedAt(updatedAt) {
 
             this.user.updatedAt = updatedAt;
+            return this;
+
+        }
+        withFollowers(followers) {
+
+            this.user.followers = followers;
+            return this;
+
+        }
+        withFollowings(followings) {
+
+            this.user.followings = followings;
             return this;
 
         }

@@ -1,0 +1,83 @@
+<ng-container>
+  <div class="card col text-center">
+    <div class="card-header">
+      <img [src]="validateAvatar()" alt="" style="width: 100px; height: 100px; margin-right: 5px;"
+        class="rounded-circle" />
+      <P class="card-text">{{product.name}}</P>
+
+      <p *ngIf="product.state == 'L' " class="badge badge-success rounded-pill d-inline m-1" [matTooltip]="'Lanzado'">
+        Lanzado</p>
+      <p *ngIf="product.state == 'P' " class="badge badge-info rounded-pill d-inline m-1"
+        [matTooltip]="'Creado pendiente por lanzar'">Creado</p>
+      <p *ngIf="product.state == 'I' " class="badge badge-danger rounded-pill d-inline m-1" [matTooltip]="'Inactivo'">
+        Inactivo</p>
+      <a [href]="product.url" target="_blank" class="text-center badge badge-warning rounded-pill d-inline m-1"
+        [matTooltip]="product.url">{{'pages.home.tables.goToSite' | translate}}</a>
+      <a [href]="'user/'+product.user.email" class="text-center badge badge-info rounded-pill d-inline m-1"
+        [matTooltip]="product.user.email">Ver autor</a>
+      <p class="card-text">
+        <mat-icon [matTooltip]="'Total de reseñas entre todos los usuarios '+product.totalComments" class="m-1"
+          (click)="showComments(product)">
+          comments
+        </mat-icon>
+
+        {{product.totalComments}}
+      </p>
+    </div>
+    <div class="card-body">
+      <div class="text-center row">
+        <div class="col-6">
+          <button style="width: 20px; height: 20px;" mat-icon-button [color]="color"
+            *ngFor="let ratingId of getStars(product.rating);index as i" [id]="'star_'+i" (click)="onClickStar(i+1)"
+            [matTooltip]="''+(ratingId+1)" matTooltipPosition="above">
+            <mat-icon class="m-1">
+              {{showIconStar(i)}}
+            </mat-icon>
+          </button>
+          <mat-error *ngIf="starCount == null || starCount == 0">
+            Star count is <strong>required</strong> and cannot be zero
+          </mat-error>
+          <p class="body-2" *ngIf="showMessage">{{rating}} / {{starCount}}
+          </p>
+          <div class="ms-3 text-center">
+            <p class="text-muted mb-0 ">
+              <span *ngIf="product">
+                <p *ngFor="let item of product.tags;" class="badge badge-primary rounded-pill d-inline m-1"
+                  [matTooltip]="item">#{{item}}</p>
+              </span>
+
+            </p>
+          </div>
+        </div>
+        <div class="col-6">
+          <p class="fw-bold mb-1" *ngIf="product">{{product.description}}</p>
+        </div>
+      </div>
+      <div class="row" *ngIf="user">
+        <form [formGroup]="form" class="m-3">
+          <!-- comment input -->
+          <mdb-form-control class="mb-4">
+            <textarea mdbInput formControlName="comment" type="text" id="comment" class="form-control">
+              </textarea>
+            <label mdbLabel class="form-label" for="comment">Reseñar producto</label>
+          </mdb-form-control>
+          <!-- rate input -->
+          <mdb-form-control class="mb-2">
+            <button mat-icon-button [color]="color"
+              *ngFor="let ratingId of ratingCommentArr;index as i" [id]="'star_'+i" (click)="onClickStarComment(i+1)"
+              [matTooltip]="''+(ratingId+1)" matTooltipPosition="above">
+              <mat-icon class="m-1">
+                {{showIconStarComment(i)}}
+              </mat-icon>
+            </button>
+          </mdb-form-control>
+          <!-- Submit button -->
+          <button mdbRipple type="submit" [disabled]="!validateForm" (click)="comment()" class="btn btn-primary btn-block mb-4">
+            Reseñar
+            </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</ng-container>

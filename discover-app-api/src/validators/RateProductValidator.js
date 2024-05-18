@@ -1,21 +1,12 @@
 const Ajv = require("ajv");
-const { DATE_FORMAT } = require('../utilities/Constants');
 const rateProductSchema = require("../models/schema/RateProductSchema.json");
-const moment = require('moment');
 
 const ajv = new Ajv({ allErrors: true });
 // Ajv option allErrors is required
 require("ajv-errors")(ajv);
 
-ajv.addFormat('date-time',
-    {
-        validate: (dateTimeString) => moment(dateTimeString, DATE_FORMAT.DEFAULT, true).isValid(),
-
-    }
-);
-
 const validateSchema = ajv.compile(rateProductSchema);
-validateErrors = (errors) => errors.map(error => `${error.instancePath ? error.instancePath : ''} ${error.message}`.trim());
+const validateErrors = (errors) => errors.map(error => `${error.instancePath ? error.instancePath : ''} ${error.message}`.trim());
 
 /**
  * validate Param Id Product
@@ -42,4 +33,4 @@ const validateRateProduct = (body,_id) => {
 }
 
 
-module.exports = { validateRateProduct, validateParamIdProduct }
+module.exports = {validateErrors, validateRateProduct, validateParamIdProduct }

@@ -1,0 +1,59 @@
+<div class="container-fluid ">
+  <div class="card discover-card m-3">
+    <mdb-tabs #tabs [pills]="true" [fill]="true">
+      <mdb-tab title="Lanzar producto nuevo">
+        <div class="ms-3 text-center align-items-center border-1">
+          <img [src]="getImage()" alt="" style="width: 150px; height: 150px; margin-right: 5px;" class="rounded-circle" />
+        </div>
+        <p class="ms-3 text-center align-items-center">
+           Avatar
+        </p>
+        <form [formGroup]="form" class="m-3">
+
+          <!-- Name input -->
+          <mdb-form-control class="mb-4">
+            <input mdbInput formControlName="name" type="text" id="name" class="form-control" required />
+            <label mdbLabel class="form-label" for="name">Nombre</label>
+          </mdb-form-control>
+
+          <!-- Description input -->
+          <mdb-form-control class="mb-4">
+            <textarea mdbInput formControlName="description" type="text" id="description" class="form-control" required >
+              </textarea>
+            <label mdbLabel class="form-label" for="description">Descripciòn</label>
+          </mdb-form-control>
+
+          <!-- tags input -->
+          <mdb-form-control class="mb-4">
+            <mat-chip-grid #chipGrid aria-label="Ingrese tags">
+              @for (tag of tags; track tag) {
+              <mat-chip-row (removed)="remove(tag)" [editable]="true" (edited)="edit(tag, $event)"
+                [aria-description]="'press enter to edit ' + tag">
+                {{tag}}
+                <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input mdbInput formControlName="tags" type="text" id="tags" class="form-control"
+              [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
+            <label mdbLabel class="form-label" for="tags">Tags</label>
+          </mdb-form-control>
+
+          <!-- rate input -->
+          <mdb-form-control class="mb-4">
+            <input mdbInput formControlName="url" min="1" max="5" type="url" id="rate" class="form-control" />
+            <label mdbLabel class="form-label" for="url">Url del sitio</label>
+          </mdb-form-control>
+          <!-- Submit button -->
+          <button mdbRipple type="submit" [disabled]="!validateForm" (click)="create()"
+            class="btn btn-primary btn-block mb-4">
+            Crear Producto
+          </button>
+        </form>
+      </mdb-tab>
+    </mdb-tabs>
+  </div>
+</div>

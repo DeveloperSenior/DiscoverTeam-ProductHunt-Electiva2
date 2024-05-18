@@ -1,0 +1,83 @@
+<!-- Navbar -->
+<nav class="navbar navbar-nav navbar-expand-md justify-content-center navbar-float navbar-dark bg-dark">
+  <!-- Container wrapper -->
+  <div class="container">
+    <!-- Navbar brand -->
+    <a class="navbar-brand me-2 logo" href="/">
+     <span class="logo-img"> </span>
+     <span class="navbar-title text-white">{{ this.translate.instant('generic.app_name')}}</span>
+     <span class="navbar-version">{{ version }}</span>
+    </a>
+
+    <!-- Toggle button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="buttonsNav.toggle()"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div
+      class="collapse navbar-collapse"
+      id="navbarButtonsExample"
+      mdbCollapse
+      #buttonsNav="mdbCollapse"
+    >
+      <!-- Left links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/">{{this.translate.instant('generic.header.menu.home')}}</a>
+        </li>
+      </ul>
+      <!-- Left links -->
+
+      <div class="d-flex align-items-center">
+        <button *ngIf="!isAuthenticated()" type="button" class="btn btn-link px-3 me-2" (click)="openModal(0)">
+          {{'generic.header.menu.login' | translate}}
+        </button>
+        <button *ngIf="!isAuthenticated()" type="button" class="btn btn-primary me-3" (click)="openModal(1)">
+          {{'generic.header.menu.signUp' | translate}}
+        </button>
+        <ul *ngIf="isAuthenticated()"  class="navbar-nav">
+          <!-- Avatar -->
+          <li mdbDropdown class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle d-flex align-items-center"
+              id="navbarDropdownMenuLink"
+              role="button"
+              mdbDropdownToggle
+              aria-expanded="false"
+            >
+            {{userSession.email}}
+              <img
+                [src]="getImage(userSession.email)"
+                class="rounded-circle"
+                height="40"
+                alt=""
+                loading="lazy"
+              />
+            </a>
+            <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li>
+                <a class="dropdown-item" [routerLink]="['user']">{{'generic.header.menu.profile' | translate}}</a>
+              </li>
+              <li>
+                <a class="dropdown-item" [routerLink]="['launch-product']">{{'generic.header.menu.launchProduct' | translate}}</a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="logout()">{{'generic.header.menu.logout' | translate}}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
+<!-- Navbar -->

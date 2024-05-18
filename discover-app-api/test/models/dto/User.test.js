@@ -17,6 +17,8 @@ describe("User DTO ", () => {
 
         const hashedToken = await bcrypt.hash('admin123', 10);
         const signinMock = new User.Builder()
+        .withId('123')
+        .withUpdatedAt('2024-03-14')
         .withEmail('testUser@gmail.com').withPassword(hashedToken)
         .withUserName('testUser').withBio('Developer').withAvatar('http://avatar/andres.png').build();
         const isEquals = await bcrypt.compare(signinMock.password, userMock.password);

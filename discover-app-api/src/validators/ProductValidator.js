@@ -7,15 +7,10 @@ const ajv = new Ajv({ allErrors: true });
 // Ajv option allErrors is required
 require("ajv-errors")(ajv);
 
-ajv.addFormat('date-time',
-    {
-        validate: (dateTimeString) => moment(dateTimeString, DATE_FORMAT.DEFAULT, true).isValid(),
 
-    }
-);
 
 const validateSchema = ajv.compile(productSchema);
-validateErrors = (errors) => errors.map(error => `${error.instancePath ? error.instancePath : ''} ${error.message}`.trim());
+const validateErrors = (errors) => errors.map(error => `${error.instancePath ? error.instancePath : ''} ${error.message}`.trim());
 
 
 const validateProduct = (body) => {
@@ -48,4 +43,19 @@ const validateRemoveProduct = (_id) => {
 
 }
 
-module.exports = { validateProduct, validateProductLaunch, validateEditProduct, validateRemoveProduct }
+const validatePagerParameter = (params) => {
+    const errors = [];
+    let isValid = true;
+    if (!params.pageSize) { errors.push("must have required property path 'pageSize'"); isValid = false; }
+    if (!params.pageNumber) { errors.push("must have required property path 'pageNumber'"); isValid = false; }
+    return { isValid: isValid, errors: errors }
+}
+
+module.exports = {
+    validateErrors,
+    validateProduct,
+    validateProductLaunch,
+    validateEditProduct,
+    validateRemoveProduct,
+    validatePagerParameter
+}

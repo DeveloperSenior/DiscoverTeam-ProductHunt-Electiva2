@@ -1,0 +1,15 @@
+{
+  "Product": {
+    "context": "/api/v1",
+    "port": 3000,
+    "services": {
+      "create": "/createProduct",
+      "launch": "/launchProduct",
+      "getLaunchedProducts": "/getLaunchedProducts",
+      "getMyProducts":"/getMyProducts",
+      "getDetailProduct":"/detailProduct",
+      "getProducts": "/getProducts",
+      "rateProduct": "/rateProduct"
+    }
+  }
+}

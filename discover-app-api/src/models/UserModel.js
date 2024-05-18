@@ -15,7 +15,9 @@ const userSchema = new Schema(
         email: { type: String, required: true, index: true, unique: true},
         password: { type: String, required: true },
         createdAt: { type: Date, required: true, index: true},
-        updatedAt: { type: Date, index: true}
+        updatedAt: { type: Date, index: true},
+        followers: { type: [Schema.Types.ObjectId], index: true, ref: 'User'},
+        followings: { type: [Schema.Types.ObjectId], index: true, ref: 'User'},
     }
 );
 

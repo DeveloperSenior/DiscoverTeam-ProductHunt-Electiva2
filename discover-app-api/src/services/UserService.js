@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const moment = require('moment');
 const { DATE_FORMAT } = require('../utilities/Constants');
+const { defer } = require('rxjs');
+
 
 const UserService = userRepository => {
 
@@ -25,8 +27,8 @@ const UserService = userRepository => {
         return await login(user);
     }
 
-    const getUsers = async () => {
-        return await userRepository.getUsers();
+    const getUsers = async (email) => {
+        return await userRepository.getUsers(email);
     }
 
     const login = async (user) => {
@@ -72,7 +74,34 @@ const UserService = userRepository => {
         }
     };
 
-    return { signin, getUsers, login }
+    const followUser = async (userId, userIdFollowed) => {
+
+        const result = await userRepository.followUser(userId, userIdFollowed);
+
+        /** Update followers user async subscribe */
+        defer(async () => {
+            await userRepository.updateFollowersUser(result._id);
+            await userRepository.updateFollowersUser(userIdFollowed);
+
+        }).subscribe();
+
+       return result;
+    }
+
+    const unfollowUser = async (userId, userIdFollowed) => {
+
+        const result = userRepository.unfollowUser(userId, userIdFollowed);
+
+        /** Update followers user async subscribe */
+        defer(async () => {
+            await userRepository.updateFollowersUser(result._id);
+            await userRepository.updateFollowersUser(userIdFollowed);
+        }).subscribe();
+
+       return result;
+     }
+
+    return { signin, getUsers, login, followUser, unfollowUser }
 
 }
 

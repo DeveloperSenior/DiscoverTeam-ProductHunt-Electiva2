@@ -153,7 +153,7 @@ router.patch('/launchProduct',verifyTokenSession, controller.launchProduct);
 
 /**
  * @swagger
- * /getMyProducts:
+ * /getMyProducts/{_idUser}:
  *   get:
  *     security:
  *      - Authorization: []
@@ -162,6 +162,12 @@ router.patch('/launchProduct',verifyTokenSession, controller.launchProduct);
  *       - Product
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: _idUser
+ *         type: string
+ *         required: false
+ *         description: _idUser user to find product.
  *     responses:
  *       '200':
  *         description: Product launched
@@ -194,7 +200,53 @@ router.patch('/launchProduct',verifyTokenSession, controller.launchProduct);
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
+router.get('/getMyProducts/:_idUser',verifyTokenSession, controller.findProductsByOwner);
+
+/**
+ * @swagger
+ * /getMyProducts:
+ *   get:
+ *     security:
+ *      - Authorization: []
+ *     description: Retrieve all product by Owner with userSession email from token JWT
+ *     tags:
+ *       - Product
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Products by session user
+ *         content:
+ *          application/json:
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ProductModel'
+ *             type: array
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *          application/json:
+ *           schema:
+ *            $ref: '#/components/schemas/DefaultException'
+ *           type: object 
+ *       '400':
+ *         description: bad request error body
+ *         content:
+ *          application/json: 
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ResponseMessageModel'
+ *             type: array
+ *       '500':
+ *         description: internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/DefaultException'
+ *             type: object
+ */
 router.get('/getMyProducts',verifyTokenSession, controller.findProductsByOwner);
+
 
 /**
  * @swagger
@@ -339,5 +391,117 @@ router.patch('/product/:_id',verifyTokenSession, controller.editProduct);
  *             type: object
  */
 router.delete('/product/:_id',verifyTokenSession, controller.removeProduct);
+
+/**
+ * @swagger
+ * /getProducts/{pageSize}/{pageNumber}:
+ *   post:
+ *     security:
+ *      - Authorization: []
+ *     description: Retrieve all product
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - in: path
+ *         name: pageSize
+ *         type: integer
+ *         required: true
+ *         description: Numeric page size of the product to get.
+ *       - in: path
+ *         name: pageNumber
+ *         type: integer
+ *         required: true
+ *         description: Numeric page number of the product to get.
+ *     requestBody:
+ *         required: false
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/ProductModel'
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Products launched
+ *         content:
+ *          application/json:
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ProductPagerModel'
+ *             type: array
+ *       '400':
+ *         description: bad request error body
+ *         content:
+ *          application/json: 
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ResponseMessageModel'
+ *             type: array
+ *       '500':
+ *         description: internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/DefaultException'
+ *             type: object
+ */
+router.post('/getProducts/:pageSize/:pageNumber', controller.findProductsPager);
+
+/**
+ * @swagger
+ * /getProductsFollowings/{pageSize}/{pageNumber}:
+ *   post:
+ *     security:
+ *      - Authorization: []
+ *     description: Retrieve all products only Followings user session
+ *     tags:
+ *       - Product
+ *     parameters:
+ *       - in: path
+ *         name: pageSize
+ *         type: integer
+ *         required: true
+ *         description: Numeric page size of the product to get.
+ *       - in: path
+ *         name: pageNumber
+ *         type: integer
+ *         required: true
+ *         description: Numeric page number of the product to get.
+ *     requestBody:
+ *         required: false
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/ProductModel'
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       '200':
+ *         description: Products launched
+ *         content:
+ *          application/json:
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ProductPagerModel'
+ *             type: array
+ *       '400':
+ *         description: bad request error body
+ *         content:
+ *          application/json: 
+ *            schema:
+ *             items:
+ *              $ref: '#/components/schemas/ResponseMessageModel'
+ *             type: array
+ *       '500':
+ *         description: internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/DefaultException'
+ *             type: object
+ */
+router.post('/getProductsFollowings/:pageSize/:pageNumber',verifyTokenSession, controller.findProductsFollowingsPager);
 
 module.exports = router;
